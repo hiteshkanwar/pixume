@@ -1,0 +1,110 @@
+= stylesheet_link_tag    "bootstrap1"
+= stylesheet_link_tag    "style1"
+= stylesheet_link_tag    "animate1"
+- if user_signed_in?
+
+  %section.container
+    .navInner
+      
+      %ul.nav.nav-pills.inner
+        - if current_user.role == "admin"
+          %li
+            = link_to "Administration", rails_admin_url, :target => "_blank"
+        - if current_user.role == "recruiter" || current_user.role == "admin"
+          - if params[:action] =~ /search_pixsume/
+            %li.active
+              %a{:href => "#"} Search
+          - else
+            %li
+              = link_to "Search", search_pixsume_path
+        - if current_user.role == "recruiter" || current_user.role == "admin"
+          - if (params[:controller]== 'job_postings' || params[:action]== 'show_profile' )
+            %li.active
+              %a{:href => "#"} Jobs
+          - else
+            %li
+              = link_to "Jobs", job_postings_path
+        - if current_user.role != "recruiter"
+          - if params[:action] =~ /profile/
+            -if  params[:action]!= 'show_profile' 
+              %li.active
+                %a{:href => "#"} Build
+            -else
+              %li
+                = link_to "Build", profile_path
+          - else
+            %li
+              = link_to "Build", profile_path
+          - if params[:action] =~ /public_pixsume/
+            %li.active
+              %a{:href => "#"} Pixsume
+          - else
+            %li
+              = link_to "Pixsume", pixsume_path
+          - if params[:action] =~ /skillsetmap/
+            %li.active
+              %a{:href => "#"} Skills
+          - else
+            %li
+              = link_to "Skills", skillsetmap_skill_sets_path 
+        -if current_user.role == "default"     
+          -if params[:action] =="job_mached"   
+            %li.active
+              = link_to "Jobs", "#"
+          -else
+            %li
+              = link_to "Jobs", job_mached_path      
+        - if current_user.role != "recruiter"  && current_user.role != "default"     
+          - if params[:action] =~ /show_resource/
+            %li.active
+              %a{:href => "#"} Resource
+          - else
+            %li{:class=>"click_resource"}
+              = link_to "Resource", resources_path
+                
+          - if params[:action] =~ /show_requestor/
+            %li.active
+              %a{:href => "#"} Requestor
+          - else
+            %li   
+              = link_to "Requestor", requestors_path        
+        /%li
+        /  %a{:href => "#"} Companies
+        /%li
+        /  %a{:href => "#"} My Jobs
+        %li.last
+          %img{:alt => "", :src => "/assets/profile-img.png"}/
+          .btn-group
+            %button.btn= current_user.name
+            %button.btn.dropdown-toggle{"data-toggle" => "dropdown"}
+              %span.caret
+            %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu", :role => "menu"}
+              - if current_user.role != "recruiter"
+                %li
+                  = link_to "My Account", profile_path, :tabindex => "-1"
+                %li
+                  = link_to "Pixsume", pixsume_path, :tabindex => "-1"
+              %li
+                = link_to "Sign Out", destroy_user_session_path, :method => :delete
+- else
+  %ul.nav.nav-pills.small
+    %li
+      = link_to "How It Works?", how_it_works_path, :class=> "how"
+    %li
+      = link_to "Pixsume Blog", "http://blog.pixsume.com/", :target => "_blank"
+    %li
+      %a.login{"data-target" => "#myModal ", "data-toggle" => "modal", :href => "#"} LOG IN
+
+  :javascript
+    $("#forgot_link").click(function(){
+      url = $(this).attr('href')
+      $.colorbox({
+        href: url,
+        width: 410,
+        height: 400
+      })
+      return false;
+    })
+
+
+    

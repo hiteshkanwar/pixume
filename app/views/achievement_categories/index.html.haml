@@ -1,0 +1,23 @@
+%h1 Listing achievement_categories
+
+%table
+  %tr
+    %th Name
+    %th Description
+    %th Is public
+    %th
+    %th
+    %th
+
+  - @achievement_categories.each do |achievement_category|
+    %tr
+      %td= achievement_category.name
+      %td= achievement_category.description
+      %td= achievement_category.is_public
+      %td= link_to 'Show', achievement_category
+      %td= link_to 'Edit', edit_achievement_category_path(achievement_category)
+      %td= link_to 'Destroy', achievement_category, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Achievement category', new_achievement_category_path

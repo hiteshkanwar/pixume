@@ -1,0 +1,113 @@
+= metamagic :title => "Pixsume Visual Resume |  Resource detail"
+:css
+  .topInfo {
+    border: none;
+    margin-bottom: 0px;
+  }
+
+  .topInfo .labelCont{
+    font-size: 14px;
+  }
+  
+  .topInfo input[type="text"] {
+    width: 90%;
+    height: 30px;
+    margin-bottom: 0px;
+  }
+  
+  .hero-unit p {
+    font-size: 12px ;
+    font-weight: normal;
+    line-height: 18px;
+  }
+  
+  table th {
+    font-weight: bold;
+  }
+
+  table td {
+    vertical-align: middle;
+  }
+
+  .careerSnap h4 {
+    color: #0088CC;
+    margin-top: 20px;
+  }
+
+  .careerSnap table td {
+    vertical-align: top;
+  }
+  .btn.btn-success {
+    padding-left: 1px;
+    margin-top:20px;
+  }
+
+%section#body.inner
+  %section.container.pro
+    
+    
+   
+    .hero-unit.infoBox.final
+      - @skill_name = resource.name
+
+      
+      
+      
+      .careerSnap
+        %h2
+          %span
+            = "Resources Available"
+        %h5{:style=>"margin-right: 626px;"}Available resource for #{@skill_name}        
+        
+        = link_to "Suggest a resource","/resource/"+("?id="+"#{resource.skill_set.id}"),:class=>"btn btn-primary",:style=>"float:right; margin-top: -38px"    
+            
+        %table{:border => "0", :cellpadding => "6", :cellspacing => "4", :width => "100%"}
+                                                       
+          - bg_color = "#EAF2D3"
+          %tr{:width => "100%", :style => "background: #{bg_color}"}
+            %td{:rowspan => 2}
+              = image_tag(resource.logo(:thumb), :alt => "", :class => 'profImg', :style => "border: none; margin: 0;")
+            %td{:width => "30%"}
+             
+              
+            %td{:width => "50%"}
+              %br
+              %p{:style => ""}
+                %span{:style=>"font-weight: bold; color: #0088CC;"}Resource Name:
+                = resource.resource_name
+                %br
+               
+                %span{:style=>"font-weight: bold; color: #0088CC;"}Resource Type:
+                - if resource.paid =="Free"
+                  %img{:alt => "", :src => "/assets/images/free.png",:style=>"border: none; margin: 0;width: 50px;"}
+                - else
+                  %img{:alt => "", :src => "/assets/images/paid.png",:style=>"border: none; margin: 0;width: 55px;"}
+                %br
+                %span{:style=>"font-weight: bold; color: #0088CC;"}Source Name:
+                = resource.source
+                %br
+                %span{:style=>"font-weight: bold; color: #0088CC;"}Resource Description:
+                = resource.description
+                %br
+                - if current_user.role == "admin"
+                  - if resource.approved == true
+                    = button_to('Active',approved_resource_skill_sets_path(resource), :class => 'btn btn-primary', :method => :get)
+                  -else
+                    %table
+                      %tr
+                        %td
+                          = button_to('Pending approval',pending_resource_skill_sets_path(resource), :class => 'btn btn-primary', :method => :get)
+                        %td
+
+                          = link_to "Edit", edit_resource_skill_sets_path(:resource_id=>params[:id],:id=>params[:skillset_id].to_i) ,:class=>"btn btn-primary ",:id=>"edit",:style=>"margin-left: 15%;"                     
+                                       
+            %td{:rowspan => 2}                 
+              = link_to "View Resource",resource.link, :target => '_tab',:class=>"btn btn-success ",:style=>"padding: 5px 0px;"
+              
+
+:javascript
+
+  $( document ).ready(function() {
+  $( ".click_resource" ).addClass('active')
+   
+  });               

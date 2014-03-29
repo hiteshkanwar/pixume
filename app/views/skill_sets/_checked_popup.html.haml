@@ -1,0 +1,8 @@
+= form_tag checked_popup_skill_sets_path do
+	%b Click on any skill name to see how to improve it.
+	%br
+	%div{:style=>"margin-top: 23px;"}
+		= check_box_tag :check
+		Don't show this message again
+	
+	= submit_tag "Ok",:class=>"btn",:style=>"float:right;"

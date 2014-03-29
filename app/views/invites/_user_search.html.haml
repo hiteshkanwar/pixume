@@ -1,0 +1,30 @@
+
+-@user_email.each do |user| 
+  %p{:style=>""}
+    =link_to user,"",:class=>"user_search"
+    
+
+
+  
+:css
+  .search_users_email
+   p.active {
+    background:#dfdfdf;
+    
+    color:white; 
+    margin-right: 325px;
+    }
+
+:javascript    
+    $().ready(function() {  
+    $('.user_search').click(function() {
+    var val = $(this).text();  
+    $(this).hide();
+    $('.select1').append($('<option>', { value : val}).text(val));
+    $( "select#user_all_ option" ).attr("selected","selected")
+    return false;
+    });
+    });
+
+
+

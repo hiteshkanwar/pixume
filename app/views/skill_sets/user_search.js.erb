@@ -1,0 +1,10 @@
+<%if !params[:data].nil?%>
+	<%if !@users.blank?%> 
+		$("#search_user_name").show();
+		$(".searchresult").show();
+		$(".searchresult").html("<%= j render('skill_sets/search_user') %>")
+	<%else%>
+		$("#search_user_name").hide();
+		$(".searchresult").html("<%= j render('invites/invites_user') %>")
+	<%end%>
+<%end%>

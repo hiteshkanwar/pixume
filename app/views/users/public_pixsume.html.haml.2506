@@ -1,0 +1,349 @@
+= metamagic :title => "#{@user.name} Visual Resume | Powered by Pixsume"
+%script{:src => "http://w.sharethis.com/button/buttons.js", :type => "text/javascript"}
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+  var switchTo5x=false;
+
+  stLight.options({publisher: "d510ccea-1af2-4124-bffd-ab33e2bee438"});
+
+  $(function() {
+    $('.achievement a').tooltip({
+      showURL: false,
+    });
+  });
+
+  $(function() {
+    $('.timeBar a').tooltip({
+      showURL: false,
+    });
+  });
+
+%section#body.inner
+  %section.container
+    %h1{:style => "float:left;"} 
+      = @user.name
+      = "- #{@user.position}" unless @user.position.blank?
+    .buttonCont
+      - if user_signed_in? && @user.id == current_user.id
+        /.btn-group
+        /  %button.btn.btn-success.dropdown-toggle{"data-toggle" => "dropdown"}
+        /    Export Resume
+        /    %span.caret
+        /  %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu", :role => "menu"}
+        /    %li
+        /      %a{:href => "#", :tabindex => "-1"} Export to Word
+        /    %li
+        /      %a{:href => "#", :tabindex => "-1"} Export to PDF
+        %a.edit{:href => profile_url} Edit
+      .addthis
+        - user_pixsume_url = public_pixsume_url(@user.profile_name)
+        - pixsume_desc = "Pixsume is visual representation of your resume, Create yours today @ www.pixsume.com"
+        %span.st_sharethis_large{:displaytext => "ShareThis", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+        %span.st_facebook_large{:displaytext => "Facebook", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+        %span.st_twitter_large{:displaytext => "Tweet", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+        %span.st_linkedin_large{:displaytext => "LinkedIn", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+        %span.st_pinterest_large{:displaytext => "Pinterest", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+        %span.st_email_large{:displaytext => "Email", :"st_url" => "#{public_pixsume_url(@user.profile_name)}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+    .hero-unit.infoBox.final
+      .topInfo
+        = image_tag(@user.profile_image(:thumb), :alt => "", :class => 'profImg')
+        .description
+          %p.basic
+            %span.mail
+              = @user.email
+            %span.phone
+              = @user.phone.blank? ? "N. A." : @user.phone
+          - unless @user.summary.blank?
+            - user_summary = @user.summary
+            - if user_summary.length > 100
+              %div.summary{:id => "summary_part"}
+                = user_summary[0..99]
+                %div{:style => "height:2px;margin:0;padding:0"}
+                %a.showhide{:id => "summary_show_more", :style => "cursor:pointer; white-space:normal"} Show more
+              %div.summary{:id => "summary_full", :style => "display: none !important;"}
+                = user_summary
+                %div{:style => "height:2px;margin:0;padding:0"}
+                %a.showhide{:id => "summary_show_less", :style => "cursor:pointer; white-space:normal"} Show less
+              :javascript
+                $(document).ready(function(){
+                  $("#summary_show_more").click(function(){
+                    $("#summary_part").css("display: none !important");
+                    $("#summary_part").hide("slow", function() {
+                      $("#summary_full").css("display: block !important");
+                      $("#summary_full").show("slow");
+                    });
+                  });
+                  
+                  $("#summary_show_less").click(function(){
+                    $("#summary_full").css("display: none !important");
+                    $("#summary_full").hide("slow", function() {
+                      $("#summary_part").css("display: block !important");
+                      $("#summary_part").show("slow");
+                    });
+                  });
+                })
+            - else
+              %div.summary
+                = user_summary
+        .video
+          - unless @user.video_url.blank?
+            - video_url = @user.video_url
+            - if video_url =~ /youtube/
+              - video_id = video_url.match(/(youtu\.be\/|youtube\.com\/((watch|ytscreeningroom)\?(.*&)?v=|(embed|v|.*\/?)\/))([^\?&"'>]+)/)[6]
+              %iframe{ :width => "292",  :height => "164", :src => "http://www.youtube.com/embed/#{video_id}", :frameborder => "0", :allowfullscreen => true}
+            - else
+              %video{ :width => "292",  :height => "164", :src => "#{video_url}", :controls => "controls", :autobuffer => "autobuffer", :tabindex => "0"}
+          %span
+      .careerSnap
+        - unless @user.experiences.blank?
+          - show_snapshot = 0
+          - curTime = Time.new
+          - exp_min_year = 0
+          - exp_max_year = curTime.year
+          - exp_total_duration = 0
+          - experiences = @user.experiences.sort { |a,b| b.from_year.to_i <=> a.from_year.to_i }
+          - experiences.each do |experience|
+            - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+            - if exp_min_year == 0
+              - exp_min_year = experience.from_year.to_i
+            - if exp_min_year > experience.from_year.to_i
+              - exp_min_year = experience.from_year.to_i
+          - if exp_min_year != 0
+            %h2
+              %span 
+                - if user_signed_in?
+                  = "My Career Snapshot"
+                - else
+                  = @user.name + "'s Career Snapshot"
+            - exp_segments = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth"]
+            .snapCont
+              - exp_total_duration_months = ( ( exp_max_year - exp_min_year ) + 1 ) * 12
+              - total_width = 900
+              - per_month_width = ( total_width / exp_total_duration_months ).round
+              .timeBar
+                - seg_idx = -1
+                - toggle = 0
+                - experiences.reverse_each do |experience|
+                  - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+                  - from_month = experience.from_month.to_i
+                  - from_year = experience.from_year.to_i
+                  - to_month = experience.to_month.to_i
+                  - to_year = experience.to_year.to_i
+                  - if from_month == 0
+                    - from_month = 1
+                  - if to_month == 0
+                    - to_month = 12
+                  - if experience.is_current
+                    - to_month = curTime.month
+                    - to_year = curTime.year
+                  - exp_duration_months = ( ( to_year - from_year ) + 1 ) * 12
+                  - exp_duration_months = exp_duration_months - ( from_month - 1)
+                  - exp_duration_months = exp_duration_months - ( 12 - to_month )
+                  - start_point = ( ( from_year - exp_min_year ) * 12 ) + ( from_month - 1)
+                  - end_point = ( start_point + exp_duration_months )
+                  - start_point = ( start_point * per_month_width ).round
+                  - end_point = ( end_point * per_month_width ).round
+                  - seg_idx += 1
+                  - seg_name = exp_segments[seg_idx]
+                  /= " Testing from_month = #{from_month} | from_year = #{from_year} | to_month = #{to_month} | to_year = #{to_year} | exp_duration_months = #{exp_duration_months} | start_point = #{start_point} | end_point = #{end_point} | exp_total_duration_months = #{exp_total_duration_months} | exp_min_year = #{exp_min_year} | exp_max_year = #{exp_max_year} | per_month_width = #{per_month_width}"
+                  %div{:class => "#{seg_name}", :style => "position: absolute; left: #{start_point}px; width: #{end_point - start_point}px; cursor: pointer;", :title => " #{experience.company_name} | #{experience.designation}\n #{experience.description}"}
+                    - if toggle == 0
+                      - toggle = 1
+                      .infoBot{:style => "position: relative; left: 10px; height: 125px;"}
+                        - if experience.company_name.length > 29
+                          %h3 #{experience.company_name[0..29]}...
+                        - else
+                          %h3 #{experience.company_name}
+                        %p #{experience.designation}
+                    - else
+                      - toggle = 0
+                      .infoTop{:style => "position: relative; left: 10px; height: 125px;"}
+                        - if experience.company_name.length > 29
+                          %h3 #{experience.company_name[0..29]}...
+                        - else
+                          %h3 #{experience.company_name}
+                        %p #{experience.designation}
+              .timeBar
+                - seg_idx = -1
+                - seg_reg_idx = -1
+                - exp_comp_name = "B "
+                - experiences.reverse_each do |experience|
+                  - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+                  - from_month = experience.from_month.to_i
+                  - from_year = experience.from_year.to_i
+                  - to_month = experience.to_month.to_i
+                  - to_year = experience.to_year.to_i
+                  - if from_month == 0
+                    - from_month = 1
+                  - if to_month == 0
+                    - to_month = 12
+                  - if experience.is_current
+                    - to_month = curTime.month
+                    - to_year = curTime.year
+                  - exp_duration_months = ( ( to_year - from_year ) + 1 ) * 12
+                  - exp_duration_months = exp_duration_months - ( from_month - 1)
+                  - exp_duration_months = exp_duration_months - ( 12 - to_month )
+                  - start_point = ( ( from_year - exp_min_year ) * 12 ) + ( from_month - 1)
+                  - end_point = ( start_point + exp_duration_months )
+                  - start_point = ( start_point * per_month_width ).round
+                  - end_point = ( end_point * per_month_width ).round
+                  - comp_rst = exp_comp_name.casecmp experience.company_name
+                  - seg_reg_idx += 1
+                  - if comp_rst == 0
+                    - exp_comp_name = experience.company_name
+                  - else
+                    - seg_idx = seg_reg_idx 
+                    - exp_comp_name = experience.company_name
+                  - seg_name = exp_segments[seg_idx]
+                  %div{:class => "#{seg_name}", :style => "position: absolute; left: #{start_point}px; width: #{end_point - start_point}px; cursor: pointer; border-top:1px solid white;", :title => " #{experience.company_name}"}
+              .timeline
+                - year_width = ( 12 * per_month_width ).round
+                /= " width #{year_width}" 
+                %ul
+                  - if exp_min_year != 0
+                    - years_count = exp_max_year - exp_min_year
+                    - (exp_min_year..exp_max_year).each do |i|
+                      - if ( years_count > 12 and ( i % 10 != 0 ) )
+                        %li{:style => "width: #{year_width}px; padding: 0; text-align: center;"} #{i.to_s[2..3]}
+                      - else
+                        %li{:style => "width: #{year_width}px; padding: 0; text-align: center;"} #{i}
+      .achievement
+        %h2
+          %span
+            - if user_signed_in?
+              = "My Achievements"
+            - else
+              = @user.name + "'s Achievements"
+        - if @user.achievements.blank?
+          - if user_signed_in?
+            = "Hey, you don't have any achievements. Add Achievements now"
+          - else
+            = @user.name + " does not have any achievements."
+        - else
+          - achievements = @user.achievements
+          - achievements.each_with_index do |achievement, index|
+            - if achievement.category.blank?
+              - icon_img = "increased-roi.png"
+            - else
+              - icon_img = AchievementCategory.get_icon_image(achievement.category)
+            - if index.even?
+              %p{:style => "cursor: pointer;", :title => "Title: #{achievement.title}\r\n#{achievement.description}"}
+                %a{:href => "#"}
+                  %img{:alt => "", :src => "/assets/#{icon_img}"}
+                  - if achievement.title.length > 29
+                    %span #{achievement.title[0..28]}...
+                  - else
+                    %span #{achievement.title}
+            - else
+              %p.alt{:style => "cursor: pointer;", :title => "Title: #{achievement.title}\r\n#{achievement.description}"}
+                %a{:href => "#"}
+                  %img{:alt => "", :src => "/assets/#{icon_img}"}
+                  - if achievement.title.length > 29
+                    %span #{achievement.title[0..28]}...
+                  - else
+                    %span #{achievement.title}
+      .skills
+        %h2
+          %span
+            - if user_signed_in?
+              = "My Skill Sets"
+            - else
+              = @user.name + "'s Skill Sets"
+        - if @user.skill_sets.blank?
+          - if user_signed_in?
+            = "Hey, you don't have any skill sets. Add Skill Sets now"
+          - else
+            = @user.name + " does not have any skill sets."
+        - else
+          .skillCont
+            %section#options{:class => "clearfix"}
+              %ul{:id => "filters", :class => "option-set clearfix", :"data-option-key" => "filter"}
+                %li
+                  %a.top12{:href => "#filter", :"data-option-value" => ".top", :class => "selected"}
+                    Top
+                %li
+                  %a.all{:href => "#filter", :"data-option-value" => ".top, .add"}
+                    All
+                %li
+                  %a.expert{:href => "#filter", :"data-option-value" => ".expert"}
+                    Expert
+                %li
+                  %a.advanced{:href => "#filter", :"data-option-value" => ".advanced"}
+                    Advanced
+                %li
+                  %a.intermediate{:href => "#filter", :"data-option-value" => ".intermediate"}
+                    Intermediate
+                %li
+                  %a.beginner{:href => "#filter", :"data-option-value" => ".beginner"}
+                    Beginner
+            %div{:id => "skillcontainer", :class => "clickable clearfix"}
+              - skill_sets = @user.skill_sets.sort! { |a,b| b.expertise_level_id <=> a.expertise_level_id }
+              - flag_add = "top"
+              - skill_sets.each_with_index do |skill_set, index|
+                /- break if index > 11
+                - if index > 11
+                  - flag_add = "add"
+                - expertise_level_id = skill_set.expertise_level_id
+                - expertise_level_width = (expertise_level_id + 1) * 25;
+                %div{:class => "skill #{skill_set.expertise_level.downcase} #{flag_add}", :"data-symbol" => "", :"data-category" => "#{skill_set.expertise_level.downcase}"}
+                  %p{:class => "number"} #{skill_set.expertise_level_id}
+                  %h3{:class => "symbol"} &nbsp;
+                  %h2{:class => "name"} #{skill_set.name}
+                  %p{:class => "weight"} &nbsp;
+:javascript
+  $(document).ready(function(){
+    var $container = $('#skillcontainer');
+    $container.imagesLoaded(function() {
+      $('#skillcontainer').isotope({
+        // options
+        itemSelector : '.skill',
+        layoutMode : 'fitRows',
+        getSortData : {
+          number : function( $elem ) {
+            return parseInt( $elem.find('.number').text(), 10 );
+          }
+        },
+        filter : '.top',
+        sortBy : 'number',
+        sortAscending : false
+      }, 
+      function( $items ) {
+        var id = this.attr('id'),
+        len = $items.length;
+      });
+
+      var $optionSets = $('#options .option-set'), $optionLinks = $optionSets.find('a');
+      $optionLinks.click(function() {
+        var $this = $(this);
+        // don't proceed if already selected
+        if ( $this.hasClass('selected') ) {
+          return false;
+        }
+        var $optionSet = $this.parents('.option-set');
+        $optionSet.find('.selected').removeClass('selected');
+        $this.addClass('selected');
+    
+        // make option object dynamically, i.e. { filter: '.my-filter-class' }
+        var options = {},
+        key = $optionSet.attr('data-option-key'),
+        value = $this.attr('data-option-value');
+        // parse 'false' as false boolean
+        value = value === 'false' ? false : value; 
+        options[ key ] = value;
+        if ( key === 'layoutMode' && typeof changeLayoutMode === 'function' ) {
+          // changes in layout modes need extra logic
+          changeLayoutMode( $this, options )
+        } else {
+          // otherwise, apply new options
+          $container.isotope( options );
+        }
+    
+        return false;
+      });
+      
+    });
+  });
+

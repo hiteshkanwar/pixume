@@ -1,0 +1,14 @@
+-if !@searched_jobs.nil?             
+  -@searched_jobs.each do |job|
+    %p{:style=>"border: medium none;color: #0088CC;font-family: 'OpenSansRegular'; font-size: 18px; font-weight: bold; margin: 0;padding: 0;"}    
+      =link_to ("#{job.title}"),job_detail_path(:id=>job.id),:remote=>true, :class=>"member"  
+    &nbsp;
+    =job.description
+    
+    %hr
+
+  -if @searched_jobs.blank?   
+    %h5
+      %span 
+
+        = "No result found"

@@ -1,0 +1,30 @@
+= metamagic :title => "Pixsume Visual Resume | Build"
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+%section#body.inner
+  %section.container
+    = flashes  
+    - if !current_user.nil?
+      .hero-unit.infoBox
+        #basic_info
+          = render 'users/basic_profile', :user => @user
+        .infoLeft
+          #video
+            = render 'users/video', :user => @user
+          %h2
+            %span About Me
+          #summary
+            = render 'users/summary', :user => @user
+          #educations_list
+            = render 'educations/list', :educations => @user.educations
+        .infoRight
+          #experiences_list
+            = render 'experiences/list', :experiences => @user.experiences
+          
+          #skill_sets_list
+            = render 'skill_sets/list', :skill_sets => @user.skill_sets
+          #achievements_list
+            = render 'achievements/list', :achievements => @user.achievements

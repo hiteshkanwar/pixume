@@ -1,0 +1,6 @@
+<% if @experience.errors.blank? %>
+  $("#experiences_list").html("<%= j render('experiences/list', :experiences => @user.experiences) %>")
+  $("#experience_msg").html("<%= j flash_ajax_msg('success', 'Experience deleted successfully') %>")
+<% else %>
+  $("#experience_msg").html("<%= j errors_for(@experience) %>")
+<% end %>

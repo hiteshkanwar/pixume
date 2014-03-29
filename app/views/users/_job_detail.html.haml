@@ -1,0 +1,121 @@
+- model_class = JobPosting
+= metamagic :title => "I am hiring! #{@job.title}"
+:css
+  #body.inner .infoBox h2 
+      text-transform: none;
+  }
+  .careerSnap p1 {
+    font-family: 'OpenSansRegular' !important;
+    font-size: 14px !important;
+    line-height: 18px;
+    color: #707070;
+    word-wrap: break-word;
+    white-space: -moz-pre-wrap;
+    white-space: pre-line;
+  }
+%script{:src => "http://w.sharethis.com/button/buttons.js", :type => "text/javascript"}
+:javascript
+  var switchTo5x=false;
+
+  stLight.options({publisher: "d510ccea-1af2-4124-bffd-ab33e2bee438"});
+%section#body
+  %section.container
+    
+    /- job_postings = @job_postin
+    %h1{:style => "float:left;"} 
+      = @job.title
+    
+    .buttonCont{:style => 'width: 410px;'}
+      - if !current_user.nil?
+        - if current_user.role != "default"
+          = link_to 'Back', job_postings_path, :class => 'btn_Apply'
+        - @user = nil
+        - if current_user
+          - @user = current_user.id
+
+      - unless !show_apply_button(current_user)
+        - if !current_user.nil?
+          = link_to 'Apply for Job', job_posting_path(:id => @job.id), :class => 'btn btn-success'
+        - else
+          - session[:return_to] = request.fullpath
+          / = link_to 'Apply for Job',user_session_path ,:class=>"btn btn-success_Apply",:style=>"left: -54px;"
+          = link_to 'Apply for Job', job_posting_path(:id => @job.id), :class => 'btn btn-success'
+        /= link_to 'Apply for Job', new_job_application_path(:job_posting_id => @job_posting.id, :user_id => @user ), :class => 'btn btn-success_Apply',:style=>"left: -54px;", :remote => 'true' 
+        / = link_to 'Apply for Job', '#', :class => 'btn btn-success_Apply model_1',:style=>"left: -54px;"
+      
+      .addthis{:style => 'padding: 0px;margin-right: 60px;'}
+        -job_url1 = job_posting_url(params[:id])  
+        -job_url=request.fullpath
+        - @job_post = JobPosting.find(params[:id])
+        - @job_descript= @job_post.description
+        - job_id_post=params[:id]
+        %span.st_sharethis_large{:displaytext => "ShareThis", :"st_url" => "#{job_url}", :"st_title" => "", :"st_summary" => ""}
+        %span.st_facebook_large{:displaytext => "Facebook", :"st_url" => "#{job_url}",:"st_title" => "", :"st_summary" => ""}
+        %span.st_twitter_large{:displaytext => "Tweet", :"st_url" => "#{job_url1}", :"st_title" => "", :"st_summary" => ""}
+        
+        %span.st_linkedin_large{:displaytext => "LinkedIn", :"st_url" => "#{job_url1}", :"st_title" => "", :"st_summary" => "#{@job_descript}"}
+        %span.st_email_large{:displaytext => "Email", :"st_url" => "#{job_url1}", :"st_title" => "", :"st_summary" => ""}
+    .hero-unit.infoBox.final{:style=>"width:94%;"}
+      .careerSnap
+        %h2
+          %span 
+            = "Job Description"
+        %p1= @job.description
+      .careerSnap
+        %h2
+          %span 
+            = "Key Requirements"
+        %p1= @job.requirements
+      - skillsets = JobPostingSkillSet.where(:job_posting_id => @job.id)
+      - unless skillsets.blank?
+        .careerSnap
+          %h2
+            %span 
+              = "Key Skillsets"
+          - skillsets.each_with_index do |skillset, index|
+            - if index != 0
+              = ", "
+            = skillset.name
+      .careerSnap
+        %h2
+          %span 
+            = "About Company"
+        - company = Company.find(@job.company_id)
+        %h4= company.company_name
+        %p1= company.company_desc
+      %div{:width => '100%', :style => 'height: 15px;'}
+      %div{:width => '100%'}
+        %table{:width => '100%'}
+          %tr
+            %td{:width => '33%'}
+              %strong= "Salary: "
+              - unless @job.salary.blank?
+                %span= "#{@job.salary}"
+              - else
+                %span= "Not specified"
+            %td{:width => '33%'}
+              %strong= "Location: "
+              %span= "#{@job.location}, #{@job.country}"
+            %td{:width => '33%'}
+              %strong= "Experience: "
+              - exp = ''
+              - from_exp_exists = false
+              - if @job.min_years_exp.blank? == false && @job.min_years_exp.to_s.empty? == false
+                - exp = @job.min_years_exp.to_s
+                - from_exp_exists = true
+              - if @job.max_years_exp.blank? == false && @job.max_years_exp.to_s.empty? == false
+                - if @job.min_years_exp != @job.max_years_exp
+                  - if from_exp_exists
+                    - exp += ' to '
+                  - exp += @job.max_years_exp.to_s
+              - if exp != ''
+                %span= "#{exp} years"
+              - else
+                %span= "Not specified"
+= link_to 'Apply for Job', job_posting_path(:id => @job.id),:style=>"float:right;" ,:class => 'btn btn-success' 
+
+
+				
+
+
+

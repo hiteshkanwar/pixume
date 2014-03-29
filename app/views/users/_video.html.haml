@@ -1,0 +1,26 @@
+%h2
+  %span My Video
+.video
+  - unless @user.video_url.blank?
+    - video_url = @user.video_url
+    - if video_url =~ /youtube/
+      - video_id = video_url.match(/(youtu\.be\/|youtube\.com\/((watch|ytscreeningroom)\?(.*&)?v=|(embed|v|.*\/?)\/))([^\?&"'>]+)/)[6]
+      %iframe{ :width => "293",  :height => "160", :src => "http://www.youtube.com/embed/#{video_id}", :frameborder => "0", :allowfullscreen => true}
+
+    - else
+      %video{ :width => "293",  :height => "160", :src => "#{video_url}", :controls => "controls", :autobuffer => "autobuffer", :tabindex => "0"}
+  %span
+- if @user.video_url.blank?
+  %div
+    %p.cliped= "Get creative, upload a link to your professional video"
+= link_to "<span></span>Edit".html_safe, edit_video_url, :class => "btn dropdown-toggle edit edit_video_link"
+  
+:javascript
+  $(".edit_video_link").click(function (){
+    url = $(this).attr('href')
+    $.colorbox({
+      href: url,
+      width: '470px'
+    })
+    return false;
+  })

@@ -1,0 +1,25 @@
+<h2><span>Forgot your password?</span></h2>
+
+<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :remote => true) do |f| %>
+<div id='password_errors'></div>
+<div class="hero-unit">
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <td>
+    <tr>
+      <td> <%= f.email_field :email, :placeholder => "Email", :style => "width: 350px;", :required => true %> </td>
+    </tr>
+    <tr>
+      <td> <%= f.submit "Send me reset password instructions", :class => "btn btn-success", :style => "" %> </td>
+    </tr></td>
+  </table>
+</div>
+<% end %>
+
+<style>
+  #cboxClose {
+    bottom: 27px !important;
+    font-size: 14px;
+    line-height: 20px;
+    left: 308px;
+  }
+</style>

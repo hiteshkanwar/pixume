@@ -1,0 +1,257 @@
+/ = metamagic :title => "Pixsume Visual Resume | Resource Available"
+/ :javascript
+/   if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+/     window.opener.location = "/";
+/     window.close();
+/   }
+
+/ %section.container
+/   .hero-unit.infoBox.final
+/     .careerSnap
+/       %h2
+/         %span
+/           = "Resources Available"
+    
+/     - if !@resources.blank?
+/       - @skill_id = @resources.collect(&:skill_set_id).uniq
+/       - @skill_name = @resources.collect(&:name).uniq
+/       %h5{:style=>"color: #0072B3;margin-right: 626px;"}Showing #{@resources.count} resources for skill #{@skill_name.first} 
+/       = link_to "Suggest a resource","/resource/"+("?id="+"#{@skill_id.first}"),:class=>"btn ",:style=>"float:right;margin-top: -42px;"
+/       %table.table.table-striped
+/         %tr
+/           %th Skill Set Name
+/           %th Resource Name
+/           %th Resource Description
+/           %th Details         
+
+/         - @resources.each do |resource|
+/           %tr     
+/             %td= resource.name     
+/             %td= resource.resource_name
+/             %td= resource.description 
+/             %td= link_to "View Detail",resource_detail_skill_set_path(resource),:class=>"btn btn-success"
+            
+      
+         
+/       = link_to "Back",:back,:class=>"btn",:style=>"float:right; margin-left: 10px"
+      
+
+/ = metamagic :title => "Pixsume Visual Resume |  Resource Available"
+/ :css
+/   .topInfo {
+/     border: none;
+/     margin-bottom: 0px;
+/   }
+
+/   .topInfo .labelCont{
+/     font-size: 14px;
+/   }
+  
+/   .topInfo input[type="text"] {
+/     width: 90%;
+/     height: 30px;
+/     margin-bottom: 0px;
+/   }
+  
+/   .hero-unit p {
+/     font-size: 12px !important;
+/     font-weight: normal;
+/     line-height: 18px !important;
+/   }
+  
+/   table th {
+/     font-weight: bold;
+/   }
+
+/   table td {
+/     vertical-align: middle;
+/   }
+
+/   .careerSnap h4 {
+/     color: #0088CC;
+/     margin-top: 20px;
+/   }
+
+/   .careerSnap table td {
+/     vertical-align: top;
+/   }
+/   .btn.btn-success {
+/     padding-left: 1px;
+/   }
+
+
+/ %section.container.pro
+/   - @skill_id = @resources.collect(&:skill_set_id).uniq
+/   - @skill_name = @resources.collect(&:name).uniq
+
+/   %h5{:style=>"color: #0072B3;margin-right: 626px;"}Showing #{@resources.count} resources for skill #{@skill_name.first.split(",").first}
+
+/   .hero-unit.infoBox.final
+/     = link_to "Suggest a resource","/resource/"+("?id="+"#{@skill_id.first}"),:class=>"btn",:style=>"float:right;"
+/     - if !@resources.blank?
+
+/       .careerSnap
+/         %h2
+/           %span
+/             = "Resources Available"
+/         - if !@resources.blank?            
+            
+/           %table{:border => "0", :cellpadding => "6", :cellspacing => "4", :width => "100%"}
+/             - @resources.each_with_index do |resource|                                            
+/               - bg_color = "#EAF2D3"
+/               %tr{:width => "100%", :style => "background: #{bg_color}"}
+/                 %td{:rowspan => 2}
+/                   = image_tag(resource.logo(:thumb), :alt => "", :class => 'profImg', :style => "border: none; margin: 0;")
+/                 %td{:width => "30%"}
+/                 %td{:width => "50%"}
+/                   %br
+/                   %p{:style => ""}
+/                     Resource Name:
+/                     = resource.resource_name
+/                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resource Type:
+/                     = resource.paid
+/                     %br
+/                     Resource Description:
+/                     = resource.description
+/                     - if current_user.role == "admin"
+/                       - if resource.approved == true
+/                         = button_to('Active',approved_resource_skill_sets_path(resource), :class => 'btn btn-primary', :method => :get)
+/                       -else
+/                         = button_to('Pending approval',pending_resource_skill_sets_path(resource), :class => 'btn btn-primary', :method => :get)     
+                    
+                                          
+/                 %td{:rowspan => 2,:style=>"padding-top: 22px ! important;"}                 
+/                   = link_to "View Resource",resource.link, :target => '_tab',:class=>"btn btn-success ",:style=>"padding: 5px 0px;"
+
+/     = link_to "Back",:back,:class=>"btn",:style=>"float:right; margin-left: 10px"            
+= metamagic :title => "Pixsume Visual Resume | Resource Available"
+:css
+  .topInfo {
+    border: none;
+    margin-bottom: 0px;
+  }
+
+  .topInfo .labelCont{
+    font-size: 14px;
+  }
+  
+  .topInfo input[type="text"] {
+    width: 90%;
+    height: 30px;
+    margin-bottom: 0px;
+  }
+  
+  .hero-unit p {
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 18px;
+  }
+  
+  table th {
+    font-weight: bold;
+  }
+
+  table td {
+    vertical-align: middle;
+  }
+
+  .careerSnap h4 {
+    color: #0088CC;
+    margin-top: 2px;
+  }
+
+  .careerSnap table td {
+    vertical-align: top;
+  }
+
+
+%section.container.pro
+  %h1{:style => "float:left;"}
+    
+  .hero-unit.infoBox.final
+
+    - @skill_id = @resources.collect(&:skill_set_id).uniq
+    - @skill_name = @resources.collect(&:name).uniq
+    
+    
+
+
+    .careerSnap
+      %h2
+        %span
+          = "Resources Available"
+      %h5{:style=>""}Showing #{@resources.count} resources for skill #{@skill_name.first.split(",").first}
+      = link_to "Suggest a resource","/resource/"+("?id="+"#{@skill_id.first}"),:class=>"btn btn-primary",:style=>"float: right; margin-top: -38px;"
+      
+         
+      %table{:border => "0", :cellpadding => "6", :cellspacing => "4", :width => "100%"}
+        - @resources.each_with_index do |resource|
+
+          
+                         
+          - bg_color = "#EAF2D3"
+          
+          %tr{:width => "100%", :style => "background: #{bg_color}"}
+            %td{:rowspan => 2}
+              = image_tag(resource.logo(:thumb), :alt => "", :class => 'profImg', :style => "border: none; margin: 0;")
+            
+             
+            %td{:width => "75%"}
+              %p{:style => "margin-top: 8px;"}
+                
+                %span{:style=>"font-weight: bold; color: #0088CC;"}Resource Name:
+                = resource.resource_name
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+                %span{:style=>"font-weight: bold; color: #0088CC;"}Resource Type:
+                - if resource.paid =="Free"
+                  %img{:alt => "", :src => "/assets/images/free.png",:style=>"border: none; margin: 0;width: 50px;"}
+                - else
+                  %img{:alt => "", :src => "/assets/images/paid.png",:style=>"border: none; margin: 0;width: 55px;"}
+                  
+                %br
+                %span{:style=>"font-weight: bold; color: #0088CC;"}Resource Description:
+                = resource.description
+                
+               
+                
+            %td{:rowspan => 2}
+              / %input{:type => "button", :value => "View Pixsume", :class => "btn dropdown-toggle", :style => "height: 28px; line-height: 28px important!; margin-bottom: 0px;",:onclick => "window open='#{public_pixsume_url(user.profile_name)}'; " }
+              /%a{href: "#{public_pixsume_url(user.profile_name)}",:target => '_tab',:class=>"btn btn-success new_tab"} View Pixsume
+            
+              = link_to "View Resource",resource.link, :target => '_tab',:class=>"btn btn-success ",:style=>"padding: 5px 0px; margin-top: 12px"
+             
+
+              
+          %tr{:width => "50%", :style => "background: #{bg_color}"}
+            %td{:width => "40%", :colspan => 2}
+              %p{:style=>"float: left; "}
+                
+              %p{:style=>"float:right; margin: 0px 175px;",:class=>"job_app"}    
+               
+      = link_to "Back",:back,:class=>"btn",:style=>"float:right; margin-top: 10px;"  
+
+
+:css
+.new_tab
+   {
+      
+      font-family: 'OpenSansSemibold';
+      font-size: 14px;
+      height: 24px;
+      line-height: 24px !important;
+      margin-bottom: 15px;
+      padding: 0 1px;
+  }
+  
+   
+  
+@-moz-document url-prefix() {
+  .job_app{
+    float:right;
+    margin: 0px 160px !important;
+    }
+  }
+
+

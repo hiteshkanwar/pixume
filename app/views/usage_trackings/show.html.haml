@@ -1,0 +1,18 @@
+%p#notice= notice
+
+%p
+  %b Session:
+  = @usage_tracking.session_id
+%p
+  %b User name:
+  = @usage_tracking.user_name
+%p
+  %b User email:
+  = @usage_tracking.user_email
+%p
+  %b Last access url:
+  = @usage_tracking.last_access_url
+
+= link_to 'Edit', edit_usage_tracking_path(@usage_tracking)
+\|
+= link_to 'Back', usage_trackings_path

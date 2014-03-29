@@ -1,0 +1,20 @@
+<% if current_user.visited_profile %>
+    <% if !session[:return_to].nil? %>
+   
+      <% if current_user.skill_sets.blank? && current_user.achievements.blank?%>
+        window.location ='<%= profile_path %>'
+      <%else%>
+        <% @a = session[:return_to] %>
+        <% session[:return_to]=nil %>
+    		window.location = "<%= @a %>"
+      <%end%>
+    <% else %>
+   		window.location = ""
+    <% end %>
+<% else %>
+	<% if !session[:return_to].nil? %>      
+		window.location = "<%= welcome_path  %>"
+  	<% else %>
+		window.location = "<%= root_path %>"
+	<% end %>
+<% end %>

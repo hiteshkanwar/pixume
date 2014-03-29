@@ -1,0 +1,98 @@
+%h2
+  %span Skill Sets
+- unless skill_sets.blank?
+  %h3.skillsTop
+    #skill_msg
+    %span.first Skillset
+    %span.second Expertise
+    %span Categories
+  #skillCont
+    - skills_count = 0
+    - skill_sets = skill_sets.sort! { |a,b| b.expertise_level_id <=> a.expertise_level_id }
+    - skill_sets.each_with_index do |skill_set, index|
+      - skills_count = index
+      - unless skill_set.blank?
+        - if index < 5
+          .slills{:style => "height:100%"}
+            - if skill_set.name.blank? || skill_set.name.strip.length == 0
+              %span.infos.first &nbsp;
+            - else
+              %span.infos.first= skill_set.name
+            %span.infos.second= skill_set.expertise_level
+            %span.infos= skill_set.category
+            .btnCont
+              = link_to "<span></span>Edit".html_safe, edit_skill_set_url(skill_set), :class => "btn dropdown-toggle edit edit_skill_link"
+              = link_to "<span></span>".html_safe,skill_set_url(skill_set), method: :delete, :class => "btn dropdown-toggle cls del_skill_link", :confirm => "Are you sure you want to delete this?"
+    - if skills_count >= 5
+      - skill_sets.each_with_index do |skill_set, index|
+        - if index == 5
+          %a.showhide{:id => "skills_show_more", :style => "cursor:pointer; white-space:normal"} Show more
+          %div{:style => "height:2px;margin:0;padding:0"}
+        - unless skill_set.blank?
+          - if index >= 5
+            .slills{:class => "skills_hidden", :style => "height:100%; display:none !important;"}
+              - if skill_set.name.blank? || skill_set.name.strip.length == 0
+                %span.infos.first &nbsp;
+              - else
+                %span.infos.first= skill_set.name
+              %span.infos.second= skill_set.expertise_level
+              %span.infos= skill_set.category
+              .btnCont
+                = link_to "<span></span>Edit".html_safe, edit_skill_set_url(skill_set), :class => "btn dropdown-toggle edit edit_skill_link"
+                = link_to "<span></span>".html_safe, skill_set_url(skill_set), :class => "btn dropdown-toggle cls del_skill_link"
+        - if index == skills_count
+          %div{:style => "height:2px;margin:0;padding:0"}
+          %a.showhide{:id => "skills_show_less", :style => "display:none !important; cursor:pointer; white-space:normal"} Show less
+- else
+  %div
+    %p.cliped{:style => "font-size: 14px;"}= "Add your Key Skillsets here"
+= link_to "<span></span>Add Skillsets".html_safe, new_skill_set_url, :class => "btn dropdown-toggle add_skill_link"        
+
+:javascript
+  $("#skills_show_more").click(function(){
+    $("#skills_show_more").css("display: none !important");
+    $("#skills_show_more").hide();
+    $(".skills_hidden").css("display: block !important");
+    $(".skills_hidden").show();
+    $("#skills_show_less").css("display: block !important");
+    $("#skills_show_less").show();
+  });
+
+  $("#skills_show_less").click(function(){
+    $("#skills_show_less").css("display: none !important");
+    $("#skills_show_less").hide();
+    $(".skills_hidden").css("display: none !important");
+    $(".skills_hidden").hide();
+    $("#skills_show_more").css("display: block !important");
+    $("#skills_show_more").show();
+  });
+
+  $(".edit_skill_link, .add_skill_link").click(function(){
+    url = $(this).attr('href')
+    $.colorbox({
+      href: url,
+      width: '470px'
+    });
+    return false;
+  });
+
+  $(".del_skill_link").click(function() {
+    var me = $(this);
+    $.confirm({
+      confirm: function(button) {
+        url = me.attr('href');
+        $.ajax({
+          url: url,
+          type: 'delete'
+        });
+      }
+    });
+    return false;
+  });
+
+  $(function() {
+    setTimeout(function() {
+      $(".alert").slideUp()
+    }, 3000);
+  });
+

@@ -1,0 +1,790 @@
+= metamagic :title => "#{@user.name} Visual Resume"
+
+
+
+%script{:src => "http://w.sharethis.com/button/buttons.js", :type => "text/javascript"}
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+  var switchTo5x=false;
+
+  stLight.options({publisher: "d510ccea-1af2-4124-bffd-ab33e2bee438"});
+
+  $(function() {
+    $('.achievement a').tooltip({
+      showURL: false,
+    });
+  });
+
+  $(function() {
+    $('.timeBar a').tooltip({
+      showURL: false,
+    });
+  });
+ 
+%section#body.inner
+  %section.container
+    .pixsume_skill_set
+      / %a.btn{"data-toggle" => "modal", href: "#myModal", role: "button", :class => "btn btn-success" } Compare with Pixsume Network
+      #myModal.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 121px; border-width: 3px; border-color: rgb(26, 185, 240);"}
+
+     
+        .modal-body
+          %b If you would like to make changes to Pixsume, Click on Edit button on the top right hand corner
+        %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"margin-left: 416px; margin-bottom: 11px;padding-left: 24px; padding-right: 33px"} Ok
+
+
+
+      #myModal_resume.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);margin-top: -150px;"}     
+        %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 26px;  width: 160px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Attach your resume
+        .modal-body{:style=>"overflow-y:hidden;"}    
+
+        
+          
+          = form_tag (upload_file_path),:remote=>true,:multipart=>true, :id=>"rusume_submit" do
+            %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+              
+              %tr
+                %td.labelCont 
+                                
+
+              %tr
+                %td.labelCont Attach your Resume(doc,docx,pdf)*                     
+                %td     
+                  =file_field_tag :file 
+                %td{:style=>"width: 125px;"}
+                  #no_file_choosen_div
+                    No file chosen                  
+
+              %tr  
+                %td  
+                  #msg{:style=>"color:red"}
+
+            .actions{:style=>"float:left;"}
+              = submit_tag 'Done' ,:class=>"btn btn-success",:id=>"job_post",:style=>"margin-top: 15px; margin-left: 320px;"
+            
+            %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right;margin-top: 15px; margin-right: 35px;",:id=>"model_close"} Cancel 
+
+
+      %h1{:style => "float:left;"} 
+        = @user.name
+        = "- #{@user.position}" unless @user.position.blank?
+      .buttonCont{:style=>"margin-right: 20px;"}
+        - if user_signed_in? && @user.id == current_user.id
+          /.btn-group
+          /  %button.btn.btn-success.dropdown-toggle{"data-toggle" => "dropdown"}
+          /    Export Resume
+          /    %span.caret
+          /  %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu", :role => "menu"}
+          /    %li
+          /      %a{:href => "#", :tabindex => "-1"} Export to Word
+          /    %li
+          /      %a{:href => "#", :tabindex => "-1"} Export to PDF
+          %a.edit{:href => profile_url,:class=>"btn btn-success",:style=>"margin-top:6px;"} Edit
+          = link_to "Export",'#',:class=>"btn btn-success edit ",:id=>'export_modal',:style=>"margin-top:6px;"
+        .addthis
+          - user_pixsume_url = public_pixsume_url(@user.profile_name)        
+          - pixsume_desc = "Pixsume is visual representation of your resume, Create yours today @ www.pixsume.com"
+          %span.st_sharethis_large{:displaytext => "ShareThis", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+          %span.st_facebook_large{:displaytext => "Facebook", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+          %span.st_twitter_large{:displaytext => "Tweet", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+          %span.st_linkedin_large{:displaytext => "LinkedIn", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+          %span.st_pinterest_large{:displaytext => "Pinterest", :"st_url" => "#{user_pixsume_url}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+          %span.st_email_large{:displaytext => "Email", :"st_url" => "#{public_pixsume_url(@user.profile_name)}", :"st_title" => "#{@user.name}'s Pixsume", :"st_summary" => "#{pixsume_desc}"}
+      .hero-unit.infoBox.final
+        .topInfo
+          
+          - if @user.profile_image.exists?
+            = image_tag(@user.profile_image(:thumb), :alt => "", :class => 'profImg')
+          -else
+            
+            - @production_img_server="107.170.114.144/assets/users/#{@user.id}/thumb/stringio.txt?1373585097"
+            - if !@production_image_server.present?
+              = image_tag(@production_img_server, :alt => "", :class => 'profImg')
+            - else
+              - @default_image="/assets/images/profile.png?1393226962"
+              = image_tag(@default_image, :alt => "", :class => 'profImg')
+          
+          .description
+            %p.basic
+              %span.mail
+                = @user.email
+              %span.phone
+                = @user.phone.blank? ? "N. A." : @user.phone
+              %p.address{:style=>"color: #000000; font-size:15px;"}
+                -if !@user.user_location.last.blank?
+                  = image_tag("/assets/images/location.png", :border => 0,:style=>"width:18px; margin-top: 10px;") 
+                  &nbsp;
+                  = @user.user_location.last.city
+                  -if !@user.user_location.last.city.blank?
+                    =","
+                  =@user.user_location.last.state 
+                  =","
+                  =@user.user_location.last.country    
+           
+          .description
+           
+            - if !@user.nil?
+              - icon_img = "attachment.png"
+              
+              -if !@user.resume_files.last.blank?
+                
+                =link_to image_tag("/assets/#{icon_img}", :border => 0,:style=>"width:18px; margin-top: 0.3%;"), @user.resume_files.last.file.url, :target=>"_blank"
+                &nbsp
+                %span
+                  =link_to "#{@user.resume_files.last.file_file_name}", "#", :class=>"edit_resume"
+                  
+                
+              -else  
+
+                -if !current_user.nil?
+                  - if current_user.role!="recruiter"
+                  
+                    =link_to image_tag("/assets/#{icon_img}", :border => 0,:style=>"width:18px; margin-top: 0.3%;"),"#", {:class => 'resume_popup'} 
+                    &nbsp
+                    %span
+                      =link_to "ATTACH YOUR RESUME","#" ,:class=>"resume_popup" 
+                -else
+                  
+                  %span
+                    &nbsp
+
+                   
+                      
+              
+            - unless @user.summary.blank?
+              - user_summary = @user.summary
+              - if user_summary.length > 100
+                %div.summary{:id => "summary_part"}
+                  = user_summary[0..99]
+                  %div{:style => "height:2px;margin:0;padding:0"}
+                  %a.showhide{:id => "summary_show_more", :style => "cursor:pointer; white-space:normal"} Show more
+                %div.summary{:id => "summary_full", :style => "display: none !important;"}
+                  = user_summary
+                  %div{:style => "height:2px;margin:0;padding:0"}
+                  %a.showhide{:id => "summary_show_less", :style => "cursor:pointer; white-space:normal"} Show less
+                :javascript
+                  $(document).ready(function(){
+                    $("#summary_show_more").click(function(){
+                      $("#summary_part").css("display: none !important");
+                      $("#summary_part").hide("slow", function() {
+                        $("#summary_full").css("display: block !important");
+                        $("#summary_full").show("slow");
+                      });
+                    });
+                    
+                    $("#summary_show_less").click(function(){
+                      $("#summary_full").css("display: none !important");
+                      $("#summary_full").hide("slow", function() {
+                        $("#summary_part").css("display: block !important");
+                        $("#summary_part").show("slow");
+                      });
+                    });
+                  })
+              - else
+                %div.summary
+                  = user_summary
+            - if user_signed_in? && current_user.role == "recruiter"
+              .ratinginfo
+                - social_rating = 0
+                - unless @user.get_social_rating.blank?
+                  - social_rating = @user.get_social_rating
+                - resume_rating = 0
+                - course_score = 0
+                - school_score = 0
+                - exp_score = 0
+                - unless @user.get_course_score.blank?
+                  - course_score = @user.get_course_score
+                - unless @user.get_school_score.blank?
+                  - school_score = @user.get_school_score
+                - unless @user.get_exp_score.blank?
+                  - exp_score = @user.get_exp_score
+                - resume_rating = ( ( course_score * 30 ) + ( school_score * 20 ) + ( exp_score * 50 ) ) / 100
+                %div
+                  %div{:style => "float: left; margin: 0 30px 10px 0;"}
+                    %span{:style => "font-weight: bold; color: #0088CC;"}=  "Social Rating: #{social_rating.round(1)}"
+                    %div.ratings{:"data-score" => "#{social_rating.round(1)}"}
+                  %div{:style => "float: left;"}
+                    %span{:style => "font-weight: bold; color: #0088CC;"}= "Resume Rating: #{resume_rating.round(1)}"
+                    %div.ratings{:"data-score" => "#{resume_rating.round(1)}"}          
+                :javascript
+                  $(document).ready(function(){
+                    $(".ratings").raty({
+                      score: function() {
+                        return $(this).attr('data-score');
+                      },
+                      readOnly: true
+                    });
+                  });
+          .video
+            - unless @user.video_url.blank?
+              - video_url = @user.video_url
+              - if video_url =~ /youtube/
+                - video_id = video_url.match(/(youtu\.be\/|youtube\.com\/((watch|ytscreeningroom)\?(.*&)?v=|(embed|v|.*\/?)\/))([^\?&"'>]+)/)[6]
+                %iframe{ :width => "292",  :height => "164", :src => "http://www.youtube.com/embed/#{video_id}", :frameborder => "0", :allowfullscreen => true}
+              - else
+                %video{ :width => "292",  :height => "164", :src => "#{video_url}", :controls => "controls", :autobuffer => "autobuffer", :tabindex => "0"}
+            %span
+        .careerSnap
+          - unless @user.experiences.blank?
+            - show_snapshot = 0
+            - curTime = Time.new
+            - exp_min_year = 0
+            - exp_max_year = curTime.year
+            - exp_total_duration = 0
+            - experiences = @user.experiences.sort { |a,b| b.from_year.to_i <=> a.from_year.to_i }
+            - experiences.each do |experience|
+              - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+              - if exp_min_year == 0
+                - exp_min_year = experience.from_year.to_i
+              - if exp_min_year > experience.from_year.to_i
+                - exp_min_year = experience.from_year.to_i
+            - if exp_min_year != 0
+              %h2
+                %span 
+                  - if user_signed_in?
+                    = "My Career Snapshot"
+                  - else
+                    = @user.name + "'s Career Snapshot"
+              - exp_segments = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth"]
+              %h6
+                %span{:style => "font-weight: bold; color: #0088CC;"} Experience: 
+                = @total_exp 
+                years 
+                %span{:style => "font-weight: bold; color: #0088CC;"}| Worked for:
+                = @number_of_companies
+                Companies
+                
+              .snapCont
+                - exp_total_duration_months = ( ( exp_max_year - exp_min_year ) + 1 ) * 12
+                - total_width = 900
+                - per_month_width = ( total_width / exp_total_duration_months ).round
+                .timeBar
+                  - seg_idx = -1
+                  - toggle = 0
+                  - experiences.reverse_each do |experience|
+                    - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+                    - from_month = experience.from_month.to_i
+                    - from_year = experience.from_year.to_i
+                    - to_month = experience.to_month.to_i
+                    - to_year = experience.to_year.to_i
+                    - if from_month == 0
+                      - from_month = 1
+                    - if to_month == 0
+                      - to_month = 12
+                    - if experience.is_current
+                      - to_month = curTime.month
+                      - to_year = curTime.year
+                    - exp_duration_months = ( ( to_year - from_year ) + 1 ) * 12
+                    - exp_duration_months = exp_duration_months - ( from_month - 1)
+                    - exp_duration_months = exp_duration_months - ( 12 - to_month )
+                    - start_point = ( ( from_year - exp_min_year ) * 12 ) + ( from_month - 1)
+                    - end_point = ( start_point + exp_duration_months )
+                    - start_point = ( start_point * per_month_width ).round
+                    - end_point = ( end_point * per_month_width ).round
+                    - seg_idx += 1
+                    - seg_name = exp_segments[seg_idx]
+                    /= " Testing from_month = #{from_month} | from_year = #{from_year} | to_month = #{to_month} | to_year = #{to_year} | exp_duration_months = #{exp_duration_months} | start_point = #{start_point} | end_point = #{end_point} | exp_total_duration_months = #{exp_total_duration_months} | exp_min_year = #{exp_min_year} | exp_max_year = #{exp_max_year} | per_month_width = #{per_month_width}"
+                    %div{:class => "#{seg_name}", :style => "position: absolute; left: #{start_point}px; width: #{end_point - start_point}px; cursor: pointer;", :title => "#{experience.company_name} | #{experience.designation}\n#{experience.description}"}
+                      - if toggle == 0
+                        - toggle = 1
+                        .infoBot{:style => "position: relative; left: 10px; height: 125px;"}
+                          %p #{experience.designation}
+                      - else
+                        - toggle = 0
+                        .infoTop{:style => "position: relative; left: 10px; height: 125px;"}
+                          %p #{experience.designation}
+                .timeBar
+                  - seg_idx = -1
+                  - prev_seg_idx = -1
+                  - seg_reg_idx = -1
+                  - exp_comp_name = "B "
+                  - experiences.reverse_each do |experience|
+                    - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+                    - from_month = experience.from_month.to_i
+                    - from_year = experience.from_year.to_i
+                    - to_month = experience.to_month.to_i
+                    - to_year = experience.to_year.to_i
+                    - if from_month == 0
+                      - from_month = 1
+                    - if to_month == 0
+                      - to_month = 12
+                    - if experience.is_current
+                      - to_month = curTime.month
+                      - to_year = curTime.year
+                    - exp_duration_months = ( ( to_year - from_year ) + 1 ) * 12
+                    - exp_duration_months = exp_duration_months - ( from_month - 1)
+                    - exp_duration_months = exp_duration_months - ( 12 - to_month )
+                    - start_point = ( ( from_year - exp_min_year ) * 12 ) + ( from_month - 1)
+                    - end_point = ( start_point + exp_duration_months )
+                    - start_point = ( start_point * per_month_width ).round
+                    - end_point = ( end_point * per_month_width ).round
+                    - comp_rst = exp_comp_name.casecmp experience.company_name
+                    - seg_reg_idx += 1
+                    - if comp_rst == 0
+                      - exp_comp_name = experience.company_name
+                    - else
+                      - seg_idx = seg_reg_idx 
+                      - exp_comp_name = experience.company_name
+                    - seg_name = exp_segments[seg_idx]
+                    %div{:class => "#{seg_name}", :style => "position: absolute; left: #{start_point}px; width: #{end_point - start_point}px; cursor: pointer; border-top:1px solid white;", :title => "#{experience.company_name}"}
+                      - if seg_idx != prev_seg_idx
+                        %span #{experience.company_name[0..29]}
+                    - prev_seg_idx = seg_idx
+                .timeline
+                  - year_width = ( 12 * per_month_width ).round
+                  /= " width #{year_width}" 
+                  %ul
+                    - if exp_min_year != 0
+                      - years_count = exp_max_year - exp_min_year
+                      - (exp_min_year..exp_max_year).each do |i|
+                        - if ( years_count > 12 and ( i % 10 != 0 ) )
+                          %li{:style => "width: #{year_width}px; padding: 0; text-align: center;"} #{i.to_s[2..3]}
+                        - else
+                          %li{:style => "width: #{year_width}px; padding: 0; text-align: center;"} #{i}
+                      %li{:style => "color: #787878; width: 1px; padding: 0; text-align: center;"}= "."
+                    
+        .achievement
+          %h2
+            %span
+              - if user_signed_in?            
+                = "My Achievements"
+              - else
+                = @user.name + "'s Achievements"
+          - if @user.achievements.blank?
+            - if user_signed_in?
+              = "Hey, you don't have any achievements." 
+              =  link_to 'Add Achievements now',new_achievement_url, :class => " dropdown-toggle add_achievement_link",:style=>"margin-left: -10px;"
+            - else
+              = @user.name + " does not have any achievements."
+          - else
+            - achievements = @user.achievements
+            - achievements.each_with_index do |achievement, index|
+              - if achievement.category.blank?
+                - icon_img = "increased-roi.png"
+              - else
+                - icon_img = AchievementCategory.get_icon_image(achievement.category)
+              - if index.even?
+                %p{:style => "cursor: pointer;", :title => "Title: #{achievement.title}\r\n#{achievement.description}"}
+                  %a{:href => "#"}
+                    %img{:alt => "", :src => "/assets/#{icon_img}"}
+                    - if achievement.title.length > 29
+                      %span #{achievement.title[0..28]}...
+                    - else
+                      %span #{achievement.title}
+              - else
+                %p.alt{:style => "cursor: pointer;", :title => "Title: #{achievement.title}\r\n#{achievement.description}"}
+                  %a{:href => "#"}
+                    %img{:alt => "", :src => "/assets/#{icon_img}"}
+                    - if achievement.title.length > 29
+                      %span #{achievement.title[0..28]}...
+                    - else
+                      %span #{achievement.title}
+          
+          .education
+            %h2
+              %span   
+                - if user_signed_in?         
+                  = "Education"
+            - if !@schools.blank?
+              %span
+              - @schools.each do |school|
+                - icon_img = "nps_bookstore_symbol-01.png"
+               
+                %p{:style => "cursor: pointer;", :title => "Degree: #{school.course}\r\nSchool Name:#{school.institute}"}
+                  %a{:href => "#"}
+                    %img{:alt => "", :src => "/assets/#{icon_img}", :style => "width:19px;"}
+             
+                      - if school.course.length > 10
+                        %span #{school.course[0..9]}...
+                        
+                      - else
+                        %span #{school.course} 
+                        
+                      - if school.institute.length > 10
+                        %span{:style=>"font-size: 12px; color: -moz-fieldtext;"} #{school.institute[0..9]}...
+                      - else
+                        %span{:style=>"font-size: 12px; color: -moz-fieldtext;"} #{school.institute}
+        .skills
+          %h2
+            %span
+              - if user_signed_in?
+                = "My Skill Sets"
+              - else
+                = @user.name + "'s Skill Sets"
+          - if @user.skill_sets.blank?
+            - if user_signed_in?
+              = "Hey, you don't have any skill sets."
+              =  link_to 'Add Skill Sets now',new_skill_set_url, :class => " dropdown-toggle add_skill_link",:style=>"margin-left: -10px;"
+            - else
+              = @user.name + " does not have any skill sets."
+          - else
+            .skillCont
+              %section#options{:class => "clearfix"}
+                %ul{:id => "filters", :class => "option-set clearfix", :"data-option-key" => "filter"}
+                  %li
+                    %a.top12{:href => "#filter", :"data-option-value" => ".top"}
+                      Top
+                  %li
+                    %a.all{:href => "#filter", :"data-option-value" => ".top, .add"}
+                      All
+                  %li
+                    %a.expert{:href => "#filter", :"data-option-value" => ".expert"}
+                      Expert
+                  %li
+                    %a.advanced{:href => "#filter", :"data-option-value" => ".advanced"}
+                      Advanced
+                  %li
+                    %a.intermediate{:href => "#filter", :"data-option-value" => ".intermediate"}
+                      Intermediate
+                  %li
+                    %a.beginner{:href => "#filter", :"data-option-value" => ".beginner"}
+                      Beginner
+              %div{:id => "skillcontainer", :class => "clickable clearfix"}
+                - skill_sets = @user.skill_sets.sort! { |a,b| b.expertise_level_id <=> a.expertise_level_id }
+                - flag_add = "top"
+                - skill_sets.each_with_index do |skill_set, index|
+                  - if index > 11
+                    - flag_add = "add"
+                  - expertise_level_id = skill_set.expertise_level_id
+                  - expertise_level_width = (expertise_level_id + 1) * 25;
+                  %div{:class => "skill #{skill_set.expertise_level.downcase} #{flag_add}", :"data-symbol" => "", :"data-category" => "#{skill_set.expertise_level.downcase}"}
+                    %p{:class => "number"} #{skill_set.expertise_level_id}
+                    %h3{:class => "symbol"} &nbsp;
+                    
+                    - if !Resource.all.collect(&:skill_set_id).include?(skill_set.id)
+                      =link_to "#{skill_set.name}",'#myModal14', :id=>skill_set.id, data: {toggle: "modal","id" => "#{skill_set.id}"},:class=>"open-AddResourceDialog name"
+                    - else
+                      - @res_available = Resource.where("skill_set_id = ?", skill_set.id)  
+                      - if !@res_available.blank?
+                        -if @res_available.first.approved == true
+                          =link_to "#{skill_set.name}","#",:class=>"resource_available_pixsume name",:id=>skill_set.id
+                        -else
+                          =link_to "#{skill_set.name}",'#myModal14', :id=>skill_set.id, data: {toggle: "modal","id" => "#{skill_set.id}"},:class=>"open-AddResourceDialog name"  
+                      - else
+                        =link_to "#{skill_set.name}",'#myModal14', :id=>skill_set.id, data: {toggle: "modal","id" => "#{skill_set.id}"},:class=>"open-AddResourceDialog name"    
+             
+                    %p{:class => "weight"} &nbsp;
+
+    #myModal14.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);"}  
+      %h4{:style=>"margin-top: 0px; margin-right: 28em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}No Resource Found
+      .modal-body{:style=>"overflow-y:hidden;"}  
+
+        %div
+          Sorry, there are no available resources for the selected skill. We are continuously working on adding new resources. You can do the following
+          
+        %div{:style=>"margin-top: 25px; font-size: 16px;"}
+          %b Send us a request, and we will add resource/s for this Skill. 
+          %br
+          %br
+          =  link_to 'Send a request', "#",:class=>"requestor btn btn-success",:value=>""
+        %br
+         
+        Or
+        %div{:style=>"margin-top: 15px; font-size: 16px;"}
+          %b if you know a resource, Suggest a resource and we will add that to available resources.
+          %br
+          %br
+          = link_to "Suggest a resource", "#" ,:class=>"resource btn btn-success ",:id=>""
+              
+        %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right;margin-top: 15px; margin-right: 44px;",:id=>"model_close"} Cancel     
+    #myModal18.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 170px; border-width: 3px; border-color: rgb(26, 185, 240);"}
+      %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Request a new resource
+      
+      .modal-body
+        %b Thanks for submitting your request, we will inform you when the requested resources are available.
+        %br/
+        %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right; margin-top: 30px; margin-right: 6px; padding-left: 30px; padding-right: 30px;",:id=>"model_close",:title=>"Request a new resource"} Ok 
+    #myModal19.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 170px; border-width: 3px; border-color: rgb(26, 185, 240);"}
+      %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Suggest resource
+      .modal-body
+        %b Thanks for submitting this resource, our team will review it and get back to you.
+
+        %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right; margin-top: 30px; margin-right: 6px; padding-left: 30px; padding-right: 30px;",:id=>"model_close",:title=>"Request a new resource"} Ok   
+
+    #export.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);margin-top: -150px;"}     
+      %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 26px;  width: 490px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Please Chose the options you want to export in your Pixsume.
+      .modal-body{:style=>"overflow-y:hidden;"}    
+
+        = form_tag user_download_pdf_path(@user.id),:multipart=>true, :id=>"rusume_submit" do
+          %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+            
+            %div{:style=>"padding-top: 10px;"} 
+              %p 
+                =check_box_tag "Sumr",nil,false,:checked=>"true"
+                ="Summary" 
+              %p 
+                =check_box_tag "Cs",nil,false,:checked=>"true"
+                ="Career Snapshot"
+                
+              %p 
+                =check_box_tag "Ach",nil,false,:checked=>"true" 
+                ="Achievements" 
+              %p 
+                =check_box_tag "Skl",nil,false,:checked=>"true" 
+                ="Skills"
+              %p 
+                =check_box_tag "Jd",nil,false,:checked=>"true" 
+                ="Job descriptions"
+              %p 
+                =check_box_tag "Ed",nil,false,:checked=>"true" 
+                ="Education"  
+
+          .actions{:style=>"float:left;"}
+            = submit_tag 'Export' ,:class=>"btn btn-success export_close",:id=>"job_post",:style=>"margin-top: 15px; margin-left: 320px;"
+          
+          %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right;margin-top: 15px; margin-right: 35px;",:id=>"model_close"} Cancel
+
+
+
+    #myModal_edit.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 120px; border-width: 3px; border-color: rgb(26, 185, 240);"}
+      %h4{:style=>"margin-top: 0px; margin-right: 28em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Update your resume
+      .modal-body
+        -if !@user.resume_files.blank? 
+          =link_to "Download", @user.resume_files.last.file.url, :class=>"download_resume"
+        &nbsp; &nbsp;       
+        =link_to "Remove",user_edit_resume_path(@user.id) 
+
+        %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right;margin-top: 15px; margin-right: 44px;",:id=>"model_close"} Cancel  
+:javascript
+   $(":file").filestyle();
+    $(":file").filestyle({buttonText: "Choose File"});
+   $(".input-large").hide();
+    $("#file").change(function(){
+    $("#no_file_choosen_div").hide()
+    });
+
+
+    $(".edit_resume").click(function(){
+      $('#myModal_edit').modal("show");  
+      $(".modal-body").focus();        
+    }); 
+  $(".download_resume").click(function(){
+      $('#myModal_edit').modal("hide");
+  });
+  
+  $(document).ready(function(){
+  
+      $("#export_modal").click(function(){
+      $('#export').modal("show");  
+      $(".modal-body").focus();
+      })
+     $('.export_close').click(function(){    
+      $('#export').modal("hide");  
+     })
+
+    var $container = $('#skillcontainer');
+    $container.imagesLoaded(function() {
+      $('#skillcontainer').isotope({
+        // options
+        itemSelector : '.skill',
+        layoutMode : 'fitRows',
+        getSortData : {
+          number : function( $elem ) {
+            return parseInt( $elem.find('.number').text(), 10 );
+          }
+        },
+        filter : '*',
+        sortBy : 'number',
+        sortAscending : false
+      }, 
+      function( $items ) {
+        var id = this.attr('id'),
+        len = $items.length;
+      });
+
+      var optionSets = $('#options .option-set'), optionLinks = optionSets.find('a');
+      optionLinks.click(function() {
+        var $this = $(this);
+        // don't proceed if already selected
+        if ( $this.hasClass('selected') ) {
+          return false;
+        }
+        var optionSet = $this.parents('.option-set');
+        optionSet.find('.selected').removeClass('selected');
+        $this.addClass('selected');
+    
+        // make option object dynamically, i.e. { filter: '.my-filter-class' }
+        var options = {},
+        key = optionSet.attr('data-option-key'),
+        value = $this.attr('data-option-value');
+        // parse 'false' as false boolean
+        value = value === 'false' ? false : value; 
+        options[ key ] = value;
+        if ( key === 'layoutMode' && typeof changeLayoutMode === 'function' ) {
+          // changes in layout modes need extra logic
+          changeLayoutMode( $this, options )
+        } else {
+          // otherwise, apply new options
+          $container.isotope( options );
+        }
+    
+        return false;
+      });
+
+      $('a.top12').click();
+    });
+  });
+
+  $(".edit_achievement_link, .add_achievement_link").click(function(){
+    url = $(this).attr('href');
+    $.colorbox({
+      href: url,
+      width: '480px'
+    });
+    return false;
+  });
+
+  $(".edit_skill_link, .add_skill_link").click(function(){
+    url = $(this).attr('href')
+    $.colorbox({
+      href: url,
+      width: '470px'
+    });
+    return false;
+  });
+
+
+
+
+  $(document).ready(function() {
+   var previousUrl = document.referrer;
+    
+    if (previousUrl == "http://www.pixsume.com/")  {
+      setTimeout(function(){
+      $('#myModal').modal("show");
+      
+       $(".modal-body").focus();
+
+      }, 3000);
+   
+    }
+
+   if (#{session[:req]=="req"}){ 
+       var a=' #{session[:req]=nil}'
+      $('#myModal18').modal("show");  
+      $(".modal-body").focus();
+       
+    } 
+    if (#{session[:res]=="res"}){ 
+       var a=' #{session[:res]=nil}'
+      $('#myModal19').modal("show");  
+      $(".modal-body").focus();
+       
+    } 
+  $(document).ready(function(){
+    if (#{session[:file_remove]=="success"}){ 
+      
+      $('#myModa125').modal("show");  
+      $(".modal-body").focus();
+      (#{session[:file_remove]="nil"})
+       
+    }
+    
+    }); 
+
+
+  });
+  $(document).on("click", ".open-AddResourceDialog", function () {
+     var skillset_id = $(this).data('id');
+     $(".resource").attr("id", skillset_id)
+  
+  });  
+
+  $(".resource").click(function(){
+    var skillset_id = $(this).attr("id");
+    window.location = "#{resource_path}?id="+skillset_id;
+
+  })
+   $(document).on("click", ".open-AddResourceDialog", function () {
+     var skillset_id1 = $(this).data('id');
+     $(".requestor").attr("value", skillset_id1)
+  
+  });  
+
+  $(".requestor").click(function(){
+    var skillset_id1 = $(this).attr("value");
+
+    window.location = "#{requestor_path}?id="+skillset_id1;
+
+  })
+  
+
+  $(".resource_available_pixsume").click(function(){
+  
+     var skillset_id = this.id;
+     $.ajax({
+      url: "#{resource_available_skill_sets_path}",
+      data: {data: skillset_id}
+    })
+  })
+  $(".resume_popup").click(function(){
+
+     $('#msg').html('<span class="LV_validation_message LV_invalid"></span>');
+     $('#myModal_resume').modal("show");
+
+   
+  })
+
+  $(document).ready(function(){
+    if (#{session[:file_saved]=="success"}){ 
+      
+      $('#myModa119').modal("show");  
+      $(".modal-body").focus();
+      (#{session[:file_saved]="nil"})
+       
+    }
+    
+    }); 
+
+  $("#rusume_submit").submit(function()
+  {
+
+    var ext = $("#file").val().split('.').pop().toLowerCase();
+    if($.inArray(ext, ['pdf','doc','docx']) == -1) {
+      
+      $('#msg').html('<span class="LV_validation_message LV_invalid">Only (doc,docx,pdf)* Accepted .</span>');
+      return false;
+      }
+      else
+      {
+       $('#msg').html('<span class="LV_validation_message LV_invalid"></span>');
+      return success;
+      }
+  }); 
+
+
+
+
+
+#myModa119.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 90px; border-width: 3px; border-color: rgb(26, 185, 240); margin-top: -150px;"}
+ 
+  .modal-body
+    %b Resume submitted successfully.
+
+    %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right; margin-top: 30px; margin-right: 6px; padding-left: 30px; padding-right: 30px;",:id=>"model_close",:title=>"Request a new resource"} Ok  
+
+#myModa125.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 90px; border-width: 3px; border-color: rgb(26, 185, 240); margin-top: -150px;"}
+ 
+  .modal-body
+    %b Resume removed successfully.
+
+    %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right; margin-top: 30px; margin-right: 6px; padding-left: 30px; padding-right: 30px;",:id=>"model_close",:title=>"Request a new resource"} Ok      
+
+:css
+
+  #myModal{
+  margin-top:auto;
+  } 
+  
+
+:css
+
+  .span {
+      background-color: #1AB9F0;
+      color: #FFFFFF;
+      display: inline-block;
+      padding: 0 8px;
+  }

@@ -1,0 +1,219 @@
+= metamagic :title => "Skill Set"
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+%section#body.inner
+  %section.container
+    
+    #myModal1.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);"}
+      
+      %h3{:style=>"margin-top: 0px; margin-right: 22em; height: 38px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"} COMPARE WITH AN INDIVIDUAL
+      .modal-body{:style=>"overflow-y:hidden;"}
+        Enter the name of person you want to compare with : 
+        %br/
+        = form_tag skillsetmap_skill_sets_path do 
+          %br
+          = text_field_tag :search,nil, :class => 'span2 ahead', :required => true, :maximum => 50
+          .actions
+            = submit_tag 'Compare' ,:class=>"btn btn-success",:id=>"search_user_name",:style=>"margin-top: -17px;"
+          .searchresult
+      
+      %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"margin-left: 416px; margin-bottom: 11px;"} Cancel
+    - if params[:designation].nil?
+      - if params[:search].nil?
+        .landing_show
+          = render "landing_show"
+      -else
+        .landing_show{:style=>"display:none"}
+          = render "landing_show"
+
+      - if params[:search].nil?
+        .last_show{:style=>"display:none"} 
+          = render "show_skillset"
+      -else
+        .last_show
+          = render "show_skillset"
+    -else
+      .last_show
+        = render "show_skillset"
+
+%br/
+%br/ 
+   
+:css
+  .ontop {
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
+    background-color: #cccccc;
+    color: #aaaaaa;
+    opacity: 1.00;
+    filter: alpha(opacity = 50);
+  
+  }
+  #popup {
+    width: 300px;
+    height: 200px;
+    position: absolute;
+    color: #000000;
+    background-color: #ffffff;
+    /* To align popup window at the center of screen*/
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -150px;
+    border-color: #1AB9F0;
+  }
+  .better{
+    background-color: #87C42B;
+    color: white;
+  }
+  .equal{
+    background-color: #FF9900;
+    color: black;
+  }
+  .improvement{
+    background-color: #FACA09;
+    color: black;
+  }
+  .unique{
+    background-color:#0088CC; 
+    color: white;
+  }
+  .missing{
+    background-color:#FF5959; 
+    color: white;
+  }
+
+  .blocks{
+    border-radius: 0px 32px 0px 0px;
+    height: 80px;
+    text-align: center;
+    width: 150px;
+    margin-right: 15px;
+    margin-top: 15px;
+  }
+
+  .skillsetmap > li {
+    height: 35px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .actions {
+    margin-left: 186px;
+    margin-top: -30px;
+  }
+  .span2.ahead {
+    margin-bottom: 18px;
+  }
+:javascript
+
+
+  $(".ahead").keyup(function(){
+   var value=$(this).val();
+
+     $.ajax({
+      url: "#{user_search_skill_sets_path}",
+      data: {data: value}
+    })
+  })
+
+ 
+
+
+   $("#last").click(function(){
+   $("#myModal").hide();
+   $(".landing_show").hide();
+   $(".last_show").show();
+   $(".in").hide();
+  
+   })
+
+  $(".skillsetmap").click(function(){
+   var abc= $(this).attr('id')
+   if(abc == "better")
+   {
+
+   $(".better").show('slow'); 
+   $(".improvement").hide();
+   $(".equal").hide();
+   $(".unique").hide();
+   $(".missing").hide();
+
+   }
+   if(abc == "improvement")
+   {
+   $(".better").hide(); 
+   $(".improvement").show('slow');
+   $(".equal").hide();
+   $(".unique").hide();
+   $(".missing").hide();
+
+   }
+   if(abc == "equal")
+   {
+   $(".better").hide(); 
+   $(".improvement").hide();
+   $(".equal").show('slow');
+   $(".unique").hide();
+   $(".missing").hide();
+  
+   }
+   if(abc == "unique")
+   {
+
+   $(".better").hide(); 
+   $(".improvement").hide();
+   $(".equal").hide();
+   $(".unique").show('slow');
+   $(".missing").hide();
+   }
+
+   if(abc == "missing")
+   {
+
+   $(".better").hide(); 
+   $(".improvement").hide();
+   $(".equal").hide();
+   $(".unique").hide();
+   $(".missing").show();
+   }
+   
+  
+   if(abc == "all")
+   {
+   $(".better").show('slow');
+   $(".improvement").show('slow');;
+   $(".equal").show('slow');
+   $(".unique").show('slow');
+   $(".missing").show('slow');
+   
+   }
+
+  })
+  $(document).ready(function(){
+   
+      if (#{params[:search] != nil}){
+      if (#{current_user.checked !=true}){ 
+        setTimeout(function(){
+        $('#myModal3').modal("show");  
+        $(".modal-body").focus();
+        }, 3000);   
+      } 
+      }
+    })
+  
+
+
+  
+
+
+
+      
+

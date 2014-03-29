@@ -1,0 +1,16 @@
+= form_for @course_rating do |f|
+  - if @course_rating.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@course_rating.errors.count, "error")} prohibited this course_rating from being saved:"
+      %ul
+        - @course_rating.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :score
+    = f.number_field :score
+  .actions
+    = f.submit 'Save'

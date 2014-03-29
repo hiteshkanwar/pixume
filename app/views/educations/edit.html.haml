@@ -1,0 +1,7 @@
+#popup4.popupBox{:style => "z-index: 9999;"}
+  %h2
+    %span Edit Education
+  .hero-unit
+    #education_errors{:style => "color: #ff0000"}
+    = form_for @education, :remote => true do |f|
+      = render 'educations/form_fields', :f => f

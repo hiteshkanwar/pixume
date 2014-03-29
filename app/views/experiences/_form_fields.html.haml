@@ -1,0 +1,46 @@
+:css
+  #cboxClose
+  {
+    font-size: 14px ;
+    bottom: 27px !important;
+  }
+%table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+  %tr
+    %td.labelCont Company Name
+    %td
+      = f.text_field :company_name, :class => 'span2', :required => true
+  %tr
+    %td.labelCont Designation
+    %td
+      = f.text_field :designation, :class => 'span2', :required => true
+  %tr
+    %td.labelCont Time Period
+    %td
+      = f.check_box :is_current
+      = f.label :is_current, "I am currently working here", :style => "display:inline;"
+  %tr
+    %td.labelCont From Period
+    %td
+      = f.select :from_month, months_for_select, {:prompt => "Select Month"}, :style => "width:160px", :required => true
+      = f.select :from_year, (1970..Date.today.year).to_a.reverse, {:prompt => "Select Year"}, :style => "width:160px", :required => true
+  %tr  
+    %td.labelCont To Period
+    %td
+      = f.select :to_month, months_for_select, {:prompt => "Select Month"}, :style => "width:160px"
+      
+      = f.select :to_year, (1970..Date.today.year).to_a.reverse, {:prompt => "Select Year"}, :style => "width:160px"
+  %tr
+    %td.labelCont Location
+    %td
+      = country_select(:experience, :country, {}, :prompt => "Select Country", :style => "width:160px;")
+      = f.text_field :city, :style => "width:160px;margin-top:-10px;margin-left:5px;", :placeholder => "State"
+  %tr
+    %td.labelCont Description
+    %td
+      = f.text_area :description, :class => 'span2', :placeholder => "Briefly describe your role; think your key responsibility areas."
+      %br
+      %br
+  %tr
+    %td &nbsp;
+    %td
+      = f.submit 'Done', :class => "btn btn-success", :style => "margin-top:-5px;"

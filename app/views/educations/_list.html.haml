@@ -1,0 +1,46 @@
+%h2
+  %span Education
+#eduCont
+  #education_msg
+  - educations.each do |education|
+    .education
+      %h3= education.institute
+      %p
+        = education.course
+        %br/
+        %span= location_date(education.location, education.from_year, education.to_year)
+      .btnCont
+        = link_to "<span></span>Edit".html_safe, edit_education_url(education), :class => "btn dropdown-toggle edit edit_edu_link"
+        = link_to "<span></span>".html_safe, "#", "data-eid" => education.id, :class => "btn dropdown-toggle cls del_edu_link"
+
+= link_to "<span></span>Add Education".html_safe, new_education_url, :class => "btn dropdown-toggle add_edu_link"
+
+:javascript
+  $(".edit_edu_link, .add_edu_link").click(function(){ 
+    url = $(this).attr('href')
+    $.colorbox({
+      href: url,
+      width: '470px'
+    })
+    return false;
+  });
+
+  $(".del_edu_link").click(function() {
+    var me = $(this);
+    $.confirm({
+      confirm: function(button) {
+        id = me.data('eid');
+        $.ajax({
+          url: '/educations/'+id+'.js',
+          type: 'delete'
+        });
+      }
+    });
+    return false;
+  });
+  
+  $(function() {
+    setTimeout(function() {
+      $(".alert").slideUp()
+    }, 3000);
+  });

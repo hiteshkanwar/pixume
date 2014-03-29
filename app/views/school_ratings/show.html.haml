@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @school_rating.name
+%p
+  %b Score:
+  = @school_rating.score
+
+= link_to 'Edit', edit_school_rating_path(@school_rating)
+\|
+= link_to 'Back', school_ratings_path

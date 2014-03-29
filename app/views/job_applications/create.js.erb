@@ -1,0 +1,23 @@
+<%if logged_in?%>
+   $(".modal-backdrop,#myModal1").hide();
+<%if @values != "applied" %>
+	$.colorbox({
+        html: "<div class='hero-unit' style='padding:10px; height:120px'><div><b>Congratulations!!! Your have applied for this job.</b></div></div>", width: "500px", close: "Ok"
+  });
+$("#cboxClose").click(function(){
+    window.location="<%= pixsume_path%>"
+  })
+<%else%>
+$.colorbox({
+        html: "<div class='hero-unit' style='padding:10px; height:120px'><div><b> Your have already applied for this job.</b></div></div>", width: "500px", close: "Ok"
+  });
+$("#cboxClose").click(function(){
+    window.location="<%= pixsume_path%>"
+  })
+<%end%>	
+<%else%>
+	$.colorbox({
+    html: "<div class='hero-unit' style='padding:10px; height:120px'><div><b>Please login to apply for this job</b></div></div>", width: "500px", close: "Ok"
+  });
+	
+<%end%>

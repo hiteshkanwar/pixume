@@ -1,0 +1,71 @@
+%h2
+  %span Experience
+- unless experiences.blank?
+  #expCont
+    #experience_msg
+    - experiences = experiences.sort { |a,b| b.from_year.to_i <=> a.from_year.to_i || b.to_year.to_i <=> a.to_year.to_i || b.from_month.to_i <=> a.from_month.to_i || b.to_month.to_i <=> a.to_month.to_i}
+    - experiences.each do |experience|
+      .experiance
+        .expTop
+          %h3= experience.company_name
+          %p
+            = experience.designation
+            %span
+              = Date::MONTHNAMES[experience.from_month.to_i]
+              = experience.from_year
+              - if experience.is_current
+                = "Current"
+              - else
+                = Date::MONTHNAMES[experience.to_month.to_i]
+                = experience.to_year
+          .btnCont
+            = link_to "<span></span>Edit".html_safe, edit_experience_url(experience), :class => "btn dropdown-toggle edit edit_exp_link"
+
+            %a.btn.dropdown-toggle.colps.exp_dc{:href => "#"}
+              %span
+            = link_to "<span></span>".html_safe, "#", "data-eid" => experience.id, :class => "btn dropdown-toggle cls del_exp_link"
+
+        .expBot{:style => 'display:none'}
+          .content
+            = simple_format(experience.description)
+- else
+  %div
+    %p.cliped{:style => "font-size: 14px;"}= "Tell us your job history"
+ 
+= link_to "<span></span>Add Experience".html_safe, new_experience_url, :class => "btn dropdown-toggle add_exp_link"
+
+:javascript
+  $(".edit_exp_link, .add_exp_link").click(function(){
+    url = $(this).attr('href');
+    $.colorbox({
+      href: url,
+      width: '580px'
+    });
+    return false;
+  });
+
+  $(".del_exp_link").click(function() {
+    var me = $(this);
+    $.confirm({
+      confirm: function(button) {
+        id = me.data('eid');
+        $.ajax({
+          url: '/experiences/'+id+'.js',
+          type: 'delete'
+        });
+      }
+    });
+    return false;
+  });
+
+  $(".exp_dc").click(function(){
+    $(this).toggleClass('drop');
+    $(this).parent().parent().parent().find('.expBot').slideToggle();
+    return false;
+  });
+  
+  $(function() {
+    setTimeout(function() {
+      $(".alert").slideUp()
+    }, 3000);
+  });

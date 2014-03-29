@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  requestor_name: MyString
+  requestor_email: MyString
+  requested_date: 2013-12-30
+  user_id: 1
+  skill_set_id: 1
+
+two:
+  requestor_name: MyString
+  requestor_email: MyString
+  requested_date: 2013-12-30
+  user_id: 1
+  skill_set_id: 1

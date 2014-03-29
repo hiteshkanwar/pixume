@@ -1,0 +1,138 @@
+= metamagic :title => "Pixsume Visual Resume | Search"
+:css
+  .topInfo {
+    border: none;
+    margin-bottom: 0px;
+  }
+
+  .topInfo .labelCont{
+    font-size: 14px;
+  }
+  
+  .topInfo input[type="text"] {
+    width: 90%;
+    height: 30px;
+    margin-bottom: 0px;
+  }
+  
+  .hero-unit p {
+    font-size: 12px !important;
+    font-weight: normal;
+    line-height: 18px !important;
+  }
+  
+  table th {
+    font-weight: bold;
+  }
+
+  table td {
+    vertical-align: middle;
+  }
+
+  .careerSnap h4 {
+    color: #0088CC;
+    margin-top: 2px;
+  }
+
+  .careerSnap table td {
+    vertical-align: top;
+  }
+
+%section#body.inner
+  %section.container
+    %h1{:style => "float:left;"}
+      = "Start searching for your future employees"
+    .hero-unit.infoBox.final
+      .topInfo{:style => "border: none; margin-bottom: none;"}
+        %form{:action => search_pixsume_path, :method => "get", :name => "search_pixsume"}
+          %table{:border => "0", :cellpadding => "6", :cellspacing => "4", :width => "100%"}
+            %tr{:width => "100%"}
+              %td
+                %input{:type => "text", :name => "criteria", :id => "criteria", :maxlength => 150, :value => params[:criteria]}
+                %input{:type => "hidden", :name => "q", :id => "q", :value => "1"}
+              %td
+                = submit_tag "Find Pixsumes", :class => "btn dropdown-toggle", :style => "height: 28px; line-height: 28px important!; margin-bottom: 0px;", :onclick => "this.form.submit();"
+      - if !params[:q].blank?
+        .careerSnap
+          %h2
+            %span
+              = "Search Results"
+          - usersCnt = 0
+          - unless @users.blank?
+            - @users.each do |user|
+              - unless user.visited_profile.blank?
+                - usersCnt = usersCnt + 1
+          - if usersCnt > 0
+            %table{:border => "0", :cellpadding => "6", :cellspacing => "4", :width => "100%"}
+              - @users.each_with_index do |user, index|
+                - unless user.visited_profile.blank?
+                  - bg_color = "#EAF2D3"
+                  - if index.even?
+                    - bg_color = "LightYellow"
+                  %tr{:width => "100%", :style => "background: #{bg_color}"}
+                    %td{:rowspan => 2}
+                      = image_tag(user.profile_image(:thumb), :alt => "", :class => 'profImg', :style => "border: none; margin: 0;")
+                    %td{:width => "30%"}
+                      %h4= user.name
+                    %td{:width => "50%"}
+                      %p{:style => "margin-top: -6px;"}
+                        - social_rating = 0
+                        - unless user.get_social_rating.blank?
+                          - social_rating = user.get_social_rating
+
+                        - resume_rating = 0
+                        - course_score = 0
+                        - school_score = 0
+                        - exp_score = 0
+                        - unless user.get_course_score.blank?
+                          - course_score = user.get_course_score
+                        - unless user.get_school_score.blank?
+                          - school_score = user.get_school_score
+                        - unless user.get_exp_score.blank?
+                          - exp_score = user.get_exp_score
+
+                        - resume_rating = ( ( course_score * 30 ) + ( school_score * 20 ) + ( exp_score * 50 ) ) / 100
+                        %div
+                          %div{:style => "float: left; margin-right: 30px;"}
+                            %span{:style => "font-weight: bold; color: #0088CC;"}= "Social Rating: #{social_rating.round(1)}"
+                            %div.rating{:"data-score" => "#{social_rating.round(1)}"}
+                          %div{:style => "float: left;"}
+                            %span{:style => "font-weight: bold; color: #0088CC;"}= "Resume Rating: #{resume_rating.round(1)}"
+                            %div.rating{:"data-score" => "#{resume_rating.round(1)}"}
+                    %td{:rowspan => 2}
+                      %input{:type => "button", :value => "View Pixsume", :class => "btn dropdown-toggle", :style => "height: 28px; line-height: 28px important!; margin-bottom: 0px;", :onclick => "self.location='#{public_pixsume_url(user.profile_name)}';"}
+                  %tr{:width => "100%", :style => "background: #{bg_color}"}
+                    %td{:width => "80%", :colspan => 2}
+                      %p
+                        - unless user.experiences.blank?
+                          - experiences = user.experiences
+                          - experiences.each do |experience|
+                            - if experience.is_current?
+                              = experience.company_name + " | " + experience.designation
+                          %br
+                        - unless user.skill_sets.blank?
+                          %span{:style => "font-weight: bold; color: #0088CC;"}= "Skills: "
+                          - skill_sets = user.skill_sets.sort! { |a,b| b.expertise_level_id <=> a.expertise_level_id }
+                          - skill_sets.each_with_index do |skill_set, index|
+                            - if index > 0
+                              = ","
+                            #{skill_set.name[0..20]}
+                          %br
+          - else
+            %p= "There are no matching results!"
+:javascript
+  $(document).ready(function(){
+    var criteria = $('input[id=criteria]').val();
+    if (criteria != "") {
+      $(".highlight").css({ backgroundColor: "red" });
+      $("body h4").highlight(criteria);
+      $("body p").highlight(criteria);
+    }
+
+    $(".rating").raty({
+      score: function() {
+        return $(this).attr('data-score');
+      },
+      readOnly: true
+    });
+  });

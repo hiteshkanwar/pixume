@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @rating.user_id
+%p
+  %b Num connections:
+  = @rating.num_connections
+%p
+  %b Num recommendations:
+  = @rating.num_recommendations
+%p
+  %b Num groups:
+  = @rating.num_groups
+%p
+  %b Num posts per month:
+  = @rating.num_posts_per_month
+
+= link_to 'Edit', edit_rating_path(@rating)
+\|
+= link_to 'Back', ratings_path

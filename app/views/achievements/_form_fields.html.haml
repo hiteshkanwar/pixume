@@ -1,0 +1,30 @@
+:css
+  #cboxClose {
+    font-size: 14px ;
+    bottom: 27px !important;
+  }
+%table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+  %tr
+    %td.labelCont Achievement Title
+    %td
+      = f.text_field :title, :required => true, :maxlength => 100
+  %tr
+    %td.labelCont Description
+    %td
+      = f.text_area :description, :class => 'span2', :required => true, :maxlength => 140, :style => "height: 60px; width: 280px;"
+      %p For example, 30 % timeline reduction in the overall project
+  %tr
+    %td.labelCont Category
+    %td
+      = f.text_field :category, :maxlength => 50, "data-provide" => "typeahead", "data-items" => "4", "data-source" => AchievementCategory.get_public_categories
+      %p For example, Project Management
+  %tr
+    %td &nbsp;
+    %td
+      = f.submit 'Done', :class => "btn btn-success dropdown-toggle"
+
+
+
+
+
+

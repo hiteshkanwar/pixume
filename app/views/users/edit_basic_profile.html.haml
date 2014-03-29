@@ -1,0 +1,125 @@
+:css
+  #cboxClose{
+    font-size: 14px;
+    bottom: 27px;
+  }
+#popup.popupBox{:style => "z-index: 9999;"}
+  %h2
+    %span Basic Information
+  = form_for @user, :remote => true do |f|
+    .imgCont
+      = image_tag(@user.profile_image(:thumb), :alt => "", :class => 'profImg')
+      = f.file_field :profile_image, :style => "margin: 33px 0 0 0;"
+    #basic_info_errors
+    .hero-unit
+      %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+        %tr
+          %td.labelCont Name
+          %td
+            = f.text_field :name, :class => 'span2', :required => true
+            /%input.span2{:onblur => "if(this.value=='')this.value='Sanjay Dey'", :onfocus => "if(this.value=='Sanjay Dey')this.value=''", :type => "text", :value => "Sanjay Dey"}/
+        %tr
+          %td.labelCont Email
+          %td
+            /%input.span2{:onblur => "if(this.value=='')this.value='deysanjay74@gmail.com'", :onfocus => "if(this.value=='deysanjay74@gmail.com')this.value=''", :type => "text", :value => "deysanjay74@gmail.com"}/
+            = f.email_field :email, :class => 'span2', :required => true
+        %tr
+          %td.labelCont Position
+          %td
+            /%input.span2{:type => "text"}/
+            = f.text_field :position, :class => 'span2'
+            %p e.g User Experience Designer
+        %tr
+          %td.labelCont Phone
+          %td
+            /%input.span2{:type => "text"}/
+            = f.text_field :phone, :class => 'span2'
+            %p For Example 732-657-7654 
+            /e.g for India +91 90073 20481
+        %tr
+          %td &nbsp;
+          %td
+            = hidden_field_tag :update_div, 'basic_info' 
+            
+            /%button.btn.btn-success.dropdown-toggle{"data-toggle" => "dropdown"} Done
+        %tr
+          %td.labelCont Country
+          %td
+
+            = select_tag "select",options_for_select(@states,"india"),:id=>'country'  
+        %tr
+          %td.labelCont Postal code/City
+          %td
+            = text_field_tag :zip, nil, :value => "#{@zip}", :style=>""
+        %tr
+          %td
+          %td
+            #loader{:style=>"display:none"} 
+              <img src='/assets/images/loading.gif'>Searching..  
+            #result{:style=>"padding: 6px 0px;"}          
+               
+              
+        %tr
+          %td 
+          %td
+            = f.submit 'Done', :class => "btn btn-success dropdown-toggle prateek"
+
+  
+                 
+           
+  / Basic Information Popup Ends
+:javascript  
+    $(document).ready(function() {
+    $('#country>option[value="#{@country}"]').prop('selected', true);
+    $('.prateek').click(function(){
+      $.colorbox.close()
+     })
+
+      
+      $("#zip").keyup(function () {
+          typewatch(function () {
+          
+        var zip=$('#zip').val()
+        var country=$('#country').val()
+         
+          if (zip!="")
+           {
+
+            $.ajax({
+              type: "POST",
+              url: "/users/#{@user.id}/user_location",
+              data: {zip: zip,country: country},
+              beforeSend: function(xhr){
+              $('#loader').show();
+              $('#result').hide();
+              },
+              success: function (dataCheck) {
+                $('#loader').hide();
+                 $('#result').show();    
+                }
+            
+            });
+            }
+            else
+            {
+              $('#result').hide();
+
+            }   
+          
+          }, 2000);
+        });
+
+         var typewatch = (function(){
+          var timer = 0;
+          return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+          }  
+        })();
+
+
+      $("#country").change(function(event) {  
+        $('#zip').val("");
+        $('#result').hide();
+      });   
+    });        

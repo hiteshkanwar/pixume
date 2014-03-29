@@ -1,0 +1,165 @@
+
+%section.container{:style=>"width: 511px;"} 
+  %ul.service-filters{:style=>"margin-top: 15px; margin-left: -10px;"}
+    %p Can’t find the person you are looking for? You can invite your friends to join Pixsume, it’s simple
+    %br 
+    %p If you know their email address, enter below
+    = form_tag("/invites/user_send_mail", method: "get",:multiple=> true) do     
+      
+      
+      = text_field_tag :search1,nil,:multiple=> true   
+      = submit_tag 'Send Invite' , :style=>"margin-top: -3px;",:class=>"btn btn-info"
+    %br  
+    %p You can Import your contacts from Gmail or Yahoo and you can send your friends an invite, Don’t worry, We will just import your contacts so that you can send an invite. Click on Gmail or Yahoo to get started 
+    %hello 
+      %li#service-gmail-filter.selected{"data-li-origin" => "gmail"}
+        %span.ready-label.hidden Ready
+        %a.sprite.sprite-gmail{href: "/contacts/gmail", title: "Gmail"}
+        .service-filter-name-container
+          .service-filter-name-outer
+            .service-filter-name-inner
+              %a{href: "/contacts/gmail", rel: "Gmail"}
+                Gmail
+      %li#service-yahooSocial-filter{"data-li-origin" => "yahooSocial"}
+        %span.ready-label.hidden Ready
+        %a.sprite.sprite-yahooSocial{href: "/contacts/yahoo", title: "Yahoo! Mail"}
+        .service-filter-name-container
+          .service-filter-name-outer
+            .service-filter-name-inner
+              %a{href: "/contacts/yahoo", rel: "Yahoo! Mail"}
+                Yahoo
+    %br 
+    %br 
+    %br 
+    %br
+    %div{:style=>"width:100%;"}
+      - if !@from_gmail.nil?
+        %b We successfully imported your contacts, Please start typing the name of the person you would like to invite to Pixsume.
+        %br/
+        %div.text_single{:style=>"width:50%;float:left; "} 
+          %br 
+          %p Search
+          = text_field_tag :search11,nil,:class => 'ahead',:style=>"float: left;"
+          .search_users_email
+        %div.text_all{:style=>"width:50%;float:right;"}        
+          = form_tag("/invites/user_send_mail", method: "get",:multiple=> true) do
+            %br
+
+            = select_tag "user_all[]", @options_for_select,:multiple => "true", :class=>"select1",:style=>"height:200px; margin-top: 9px;"
+            %br
+            %br
+            = submit_tag 'Send Invite' , :style=>"width:220px;",:class=>"btn btn-info"
+       
+
+ 
+
+:javascript
+  $(".ahead").keyup(function(){
+    var value=$(this).val();  
+    $.ajax({
+      type: 'GET',
+      url: '/invites/:provider/contact_callback',
+      data: {'data': value}
+    });
+  });
+
+      
+:css
+  a { text-decoration:none !important }
+  .service-filters {
+      background-color: #F0F0F0;
+      border-top: 1px solid #D7D7D7;
+      overflow: hidden;
+      padding: 16px 10px 200px;
+      width: 100%;
+  }
+  ol, ul {
+      list-style: none outside none;
+  }
+  .service-filters li:hover, .service-filters li.selected {
+      border: 1px solid #23639C;
+      box-shadow: 0 2px 5px 0 #909090;
+  }
+  .service-filters li {
+      background-color: #FFFFFF;
+      border: 1px solid #D7D7D7;
+      cursor: pointer;
+      display: inline-block;
+      float: left;
+      height: 58px;
+      margin: 6px 6px 0 0;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+  }
+  
+  .service-filter-container a, .service-filter-container a:link, .service-filter-container a:hover {
+      color: #000000;
+      display: table-cell;
+      text-decoration: none;
+      vertical-align: middle;
+  }
+  .sprite-gmail {
+      background-position: 12px -151px !important;
+  }
+
+  .service-filter-container a, .service-filter-container a:link, .service-filter-container a:hover {
+      color: #000000;
+      display: table-cell;
+      text-decoration: none;
+      vertical-align: middle;
+  }
+  .sprite-yahooSocial {
+      background-position: 12px -366px !important;
+  }
+  .sprite {
+      background: url("107.170.114.144/assets/sprite_invite_v3.png") no-repeat scroll 0 0 transparent;
+  }
+  .service-filters li a {
+      display: block;
+      padding: 33px 0 0 2px;
+      position: relative;
+      width: 79px;
+      z-index: 2;
+  }
+  .service-filters li > a {
+      height: 0;
+  }
+  .service-filter-container a, .service-filter-container a:link, .service-filter-container a:hover {
+      color: #000000;
+      display: table-cell;
+      text-decoration: none;
+      vertical-align: middle;
+  }
+  a {
+      color: #006699;
+      text-decoration: none;
+  }
+  
+  .service-filters li .service-filter-name-container {
+      height: 24px;
+      overflow: hidden;
+      width: 81px;
+  }
+  
+  
+  .service-filters li .service-filter-name-container .service-filter-name-outer {
+      display: table;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+  }
+  
+  .service-filters li .service-filter-name-container .service-filter-name-outer .service-filter-name-inner {
+      display: table-cell;
+      left: 0;
+      top: 50%;
+      vertical-align: middle;
+  }
+  
+  
+  .service-filters li .service-filter-name-container .service-filter-name-outer .service-filter-name-inner a {
+      padding: 0;
+      top: -50%;
+  }

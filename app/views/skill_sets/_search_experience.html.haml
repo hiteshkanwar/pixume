@@ -1,0 +1,32 @@
+-@skillset_title.each do |skillset_title|
+  %p
+    =link_to skillset_title,"",:class=>"title_search"
+  
+
+
+:javascript
+
+  $('.title_search').click(function(event)
+  {
+    
+    event.preventDefault();
+    var category = $(this).text();
+    
+    $("#designation").val(category);
+    
+  });    
+
+  $('.searchcategory p').on('click', function(){
+
+    $(this).addClass('active').siblings().hide();
+  });
+
+
+:css
+  .searchcategory
+   p.active {
+    background:#dfdfdf;
+    font-weight:bold;
+    color:white; 
+    margin-right: 325px;
+    }

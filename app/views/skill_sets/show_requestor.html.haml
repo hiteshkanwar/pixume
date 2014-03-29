@@ -1,0 +1,25 @@
+%section#body.inner
+  %section.container
+    .hero-unit.infoBox.final         
+      .sort_resource
+        %h1{:style=>"width:50%; float:left;"} Listing requestors
+        %p{:style=>"float:right;"}
+          
+          = link_to "Export",user_requestor_pdf_path(current_user.id),:class=>"btn btn-success edit",:style=>"margin-top:6px;"
+        %br   
+        %table.table.table-striped
+          %tr
+            %th Requester Name
+            %th Requester Email 
+            %th Skill set name
+            %th Requested date
+  
+          - @requestors.each do |requestor|
+            %tr
+              %td= requestor.requestor_name
+              %td= requestor.requestor_email
+              - @skill=SkillSet.find(requestor.skill_set_id)
+              %td= @skill.name
+              %td= requestor.requested_date
+            
+              

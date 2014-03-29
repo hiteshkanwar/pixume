@@ -1,0 +1,31 @@
+-@users.each do |user| 
+  %p
+    =link_to user,"",:class=>"category_search"
+   
+ 
+
+:javascript
+
+  $('.category_search').click(function(event)
+  {
+    
+    event.preventDefault();
+    var category = $(this).text();
+    
+    $("#search").val(category);
+    
+  });  
+
+  $('.searchresult p').on('click', function(){
+
+    $(this).addClass('active').siblings().hide();
+  });
+
+:css
+  .searchresult
+   p.active {
+    background:#dfdfdf;
+    font-weight:bold;
+    color:white; 
+    margin-right: 325px;
+    }

@@ -1,0 +1,52 @@
+.infoTop
+  - if @user.profile_image.exists?
+    = image_tag(@user.profile_image(:thumb), :alt => "", :class => 'profImg')
+  -else
+    - @production_img_server="107.170.114.144/assets/users/#{@user.id}/thumb/stringio.txt?1373585097"
+    - if !@production_image_server.present?
+      = image_tag(@production_img_server, :alt => "", :class => 'profImg')
+      
+    - else
+      = image_tag(@user.profile_image(:thumb), :alt => "", :class => 'profImg')
+  .basicInfoCont
+    %h3 
+      = user.name
+      = "- #{user.position}" unless user.position.blank?
+    %p.mail
+      = user.email
+    %p.phone 
+      = user.phone.blank? ? "N. A." : user.phone
+    %p.address{:style=>"margin-left: -25px;"}
+      -if !user.user_location.last.blank?    
+        = image_tag("/assets/images/location.png", :border => 0,:style=>"width:18px;")
+        &nbsp; 
+        
+        = user.user_location.last.city
+        -if !user.user_location.last.city.blank?
+          =","
+        =user.user_location.last.state 
+        =","
+        =user.user_location.last.country 
+
+        
+    = link_to "<span></span>Edit".html_safe, edit_basic_info_url, :class => "btn dropdown-toggle edit edit_profile_link"
+ 
+  .div{:style => "float: right; margin: 42px 0 10px 0;"} 
+    .btn-group
+      = link_to "Create Pixsume", pixsume_url, :class => "btn btn-success", :style => "height:20px;"
+    .div{:style => "height:8px; clear:both"}
+    /.btn1-group
+    /  = link_to "Delete User", user_url(user), :method => :delete,  :class => "btn edit", :style => "height:20px;"
+  .div{:style => "height:8px; clear:both"}
+
+:javascript
+  $(document).ready(function(){
+    $(".edit_profile_link").click(function(){
+      url = $(this).attr('href')
+      $.colorbox({
+        href: url,
+        width: '470px'
+      })
+      return false;
+    })
+  })

@@ -1,0 +1,25 @@
+<div style="padding: 10px 30px;">
+  <h2>Resend confirmation instructions</h2>
+
+  <%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f| %>
+    <% if !resource.errors.blank? %>
+      <div id="error_explanation">
+        <ul>
+          <li>Confirmation link is not active any more.</li>
+        </ul>
+      </div>
+      Please click on the latest confirmation link or use your registered email address to resend confirmation instructions.
+    <% end %>
+
+    <div style="padding-top: 10px;">
+      <%= f.label :email %>
+      <%= f.email_field :email %>
+    </div>
+
+    <div style="padding-top: 10px;">
+      <%= f.submit "Resend confirmation instructions" %>
+    </div>
+  <% end %>
+  <br/>
+  <%= render "devise/shared/links" %>
+</div>

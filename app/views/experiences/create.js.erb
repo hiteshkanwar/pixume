@@ -1,0 +1,8 @@
+<% if @experience.errors.blank? %>
+  if($("#experiences_list").length > 0){
+    $("#experiences_list").html("<%= j render('experiences/list', :experiences => @user.experiences) %>")
+  }
+  $.colorbox.close()
+<% else %>
+  $("#experience_errors").html("<%= j errors_for(@experience) %>")
+<% end %>

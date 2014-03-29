@@ -1,0 +1,204 @@
+= stylesheet_link_tag    "bootstrap1"
+= stylesheet_link_tag    "style1"
+= stylesheet_link_tag    "animate1"
+
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+:css
+  #cboxClose{
+    bottom: 17px;
+  }
+/ %header
+/   %section.headerInner
+/     %section.container
+/       = flashes
+
+%div
+.banner
+  .container
+    .row
+      .col-md-6.col-sm-6.czindex
+        %iframe{:allowTransparency => "true", :allowfullscreen => "", :frameborder => "0", :height => "305", :mozallowfullscreen => "", :src => "http://www.youtube.com/embed/msAout27np8?rel=0&wmode=transparent", :webkitallowfullscreen => "", :width => "100%"}
+      .col-md-5.steps.col-sm-6
+        %h3 Helping Job seekers stand out from competition
+        %ul
+          %li
+            %span> 1
+            Create your resume in visual resume format, don't worry about format, we got it covered.
+          %li
+            %span> 2
+            Compare your resume with others, get instant resume rating and feedback.
+          %li
+            %span> 3
+            Use available resources to improveyour resume, Apply for the job.
+          %li
+            %a.started{"data-target" => "#myModal2", "data-toggle" => "modal", :href => "#"} Get started now, its free!
+
+
+
+.standout
+  .container
+    .row
+      .col-md-10.col-sm-9.grey-p
+        %p
+          %input.stand_txt.grey-input{:onblur => "if(this.value == '') { this.value='Still not convinced, No problem, enter the title of your dream job and click on stand out to see how we can help'}", :onfocus => "if (this.value == 'Still not convinced, No problem, enter the title of your dream job and click on stand out to see how we can help') {this.value=''}", :type => "text", :value => "Still not convinced, No problem, enter the title of your dream job and click on stand out to see how we can help",  :style=>"height: 34px;"}/
+      .col-md-2.col-sm-3.text-center
+        / %a.stand
+        = link_to "Stand out", users_standout_path, :class => "stand", :style=>"width: 143px;"
+
+.threesteps
+  .container
+    .row
+      .col-md-12.text-center
+        %h3 You are 3 steps away from standing out from the crowd
+    .row.allstep
+      .col-md-4.col-sm-4.text-center.one
+        .arrow_img
+          %img{:alt => "", :src => "../assets/img/arrow.png", :title => ""}/
+        .icon
+          %img{:alt => "", :src => "../assets/img/create.png", :title => ""}/
+        %ul.step-list
+          %li
+            %span.glyphicon.glyphicon-minus.red.icon_width
+            .list-content Start with creating a visual resume
+          %li
+            %span.glyphicon.glyphicon-minus.red.icon_width
+            .list-content Visual resume format recommended by recruiters
+      .col-md-4.col-sm-4.text-center.two
+        .arrow_img
+          %img{:alt => "", :src => "../assets/img/arrow.png", :title => ""}/
+        .icon
+          %img{:alt => "", :src => "../assets/img/access.png", :title => ""}/
+        %ul.step-list
+          %li
+            %span.glyphicon.glyphicon-minus.orange.icon_width
+            .list-content Compare your resume with thousand other profiles
+          %li
+            %span.glyphicon.glyphicon-minus.orange.icon_width
+            .list-content Understand where your resume is weak, using a proprietary resume rating system
+      .col-md-4.col-sm-4.text-center.three
+        .icon
+          %img{:alt => "", :src => "../assets/img/Improve.png", :title => ""}/
+        %ul.step-list
+          %li
+            %span.glyphicon.glyphicon-minus.blue.icon_width
+            .list-content Acquire missing skill sets using Pixsume resource network
+          %li
+            %span.glyphicon.glyphicon-minus.blue.icon_width
+            .list-content Apply for the job
+
+
+.clients
+  .container
+    .col-md-12.col-sm-8
+      %h3.as As covered on
+      .clearfix
+    .clearfix
+    .col-md-12
+      .col-md-2.col-sm-3.text-center{:style => "width: 14%;"}
+        %a{:href => "http://bit.ly/1lBPbhe"}
+          %img{:src => "../assets/img/Google_news_logo.png"}
+      .col-md-3.col-sm-3.text-center{:style => "width: 14%;"}
+        %a{:href => "http://bit.ly/1kllxg2"}
+          %img{:src => "../assets/img/silicon-vally.png"}/
+      .col-md-2.col-sm-3.text-center{:style => "width: 14%;"}
+        %a{:href => "http://bit.ly/1nRooyN"}
+          %img{:src => "../assets/img/tmh_logo.png"}/
+      .col-md-2.col-sm-3.text-center{:style => "width: 14%;"}
+        %a{:href => "http://bo.st/1heHI4R"}
+          %img{:src => "../assets/img/bcom_small.png"}/          
+      .col-md-2.col-sm-3.text-center{:style => "width: 9%;"}
+        %a{:href => "http://bit.ly/1cTQiJq"}
+          %img{:src => "../assets/img/ask.png"}/
+      .col-md-3.col-sm-3.text-center{:style => "width: 14%;"}
+        %a{:href => "http://bit.ly/N9cwdU"}
+          %img{:src => "../assets/img/IBT_logo.png"}/
+      .col-md-2.col-sm-3.text-center{:style => "width: 14%;"}
+        %a{:href => "http://bit.ly/1i7POON"}
+          %img{:src => "../assets/img/wall-street.png"}/
+
+          / modal
+/ Sign in
+#myModal.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} &times;
+        %h4#myModalLabel.modal-title Sign In
+      .modal-body
+        .msg
+          .alert.alert-success
+            / <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            %strong Well done!
+            You successfully read this important alert message.
+        = form_for(resource, :as => resource_name, :url => session_path(resource_name), :remote => true, :class => "loginform form-horizontal") do |f|
+          .input-group
+            %span.input-group-addon
+              %i.glyphicon.glyphicon-user
+            = f.email_field :email, :placeholder => 'Email', :required => true, :class => "login-username form-control", :style=>"height: 28px;"
+          .input-group
+            %span.input-group-addon
+              %i.glyphicon.glyphicon-lock
+            = f.password_field :password, :placeholder => 'Password', :required => true, :class => "login-password form-control", :style=>"height: 29px;"
+          .input-group
+            .checkbox
+              %label
+              = f.check_box :remember_me, :class => "login-remember"
+              Remember me
+          .input-group
+            .col-sm-12.controls
+              = f.submit "Log In", :class => "btn-login btn btn-success"
+              or
+              %a#btn-fblogin.btn.btn-primary{:href => "/auth/linkedin"} Login with Linkedin
+          .input-group
+            .col-md-12.control
+              %div{:style => "border-top: 1px solid#888; padding-top:15px; font-size:85%"}
+                Don't have an account!
+                %a{"data-dismiss" => "modal", "data-target" => "#myModal2", "data-toggle" => "modal", :href => "#"} Sign Up Here
+/ Sign Up
+#myModal2.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} &times;
+        %h4#myModalLabel.modal-title Sign Up
+      .modal-body
+        %form#loginform.form-horizontal
+        = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :remote => true) do |f|
+          .input-group
+            %span.input-group-addon
+              %i.glyphicon.glyphicon-user
+            = f.text_field :name, :placeholder => "Name", :required => 'true', :class => "login-username form-control", :style=>"height: 28px;"
+          .input-group
+            %span.input-group-addon
+              %i.glyphicon.glyphicon-envelope
+            = f.email_field :email, :placeholder => "Email", :required => 'true', :email => 'true', :class => "login-username form-control", :style=>"height: 29px;"
+          .input-group
+            %span.input-group-addon
+              %i.glyphicon.glyphicon-lock
+            = f.password_field :password, :placeholder => "Password", :required => 'true', :class => "login-password form-control", :style=>"height: 28px;"
+          .input-group
+            %span.input-group-addon
+              %i.glyphicon.glyphicon-lock
+            = f.password_field :password_confirmation, :placeholder => "Password Confirmation", :required => 'true', :class => "login-password form-control", :style=>"height: 28px;"
+          .form-group
+            .col-sm-12.controls
+              = f.submit "Create Account", :class => "btn-login btn btn-success"
+              or
+              %a#btn-fblogin.btn.btn-primary{:href => "#"} Login with Linkedin
+          .form-group
+            .col-md-12.control
+              %div{:style => "border-top: 1px solid#888; padding-top:15px; font-size:85%"}
+                Already have an account!
+                %a{"data-dismiss" => "modal", "data-target" => "#myModal", "data-toggle" => "modal", :href => "#"} Sign in Here
+/ modal
+       
+:javascript
+    $('input[type=text], input[type=password], input[type=email]').placeholder();
+  $('#btn-login').on('click', function(){
+    $('.msg').show();
+    $('.msg').delay(2000).fadeOut();
+    });

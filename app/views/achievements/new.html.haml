@@ -1,0 +1,11 @@
+#popup4.popupBox{:style => "z-index: 9999;"}
+  %h2
+    %span Add Achievement
+  .hero-unit
+    #achievement_errors{:style => "color: #ff0000"}
+    - if (request.protocol + request.host_with_port + "/" + current_user.profile_name == request.referer)
+      = form_for @achievement do |f|
+        = render 'achievements/form_fields', :f => f
+    - else     
+      = form_for @achievement, :remote => true do |f|
+        = render 'achievements/form_fields', :f => f

@@ -1,0 +1,9 @@
+<% if resource.errors.blank? %>
+  $.colorbox({
+    html: "<div class='hero-unit' style='padding:10px; height:120px'><div class='alert alert-success'><b>Congratulations!!! Your registration is successful.</b><br/>We sent you an email with confirmation link. Please activate your account by visiting the link.</div></div>", width: "500px", close: "Ok"
+  });
+  
+  $("form").find('input[type=email], input:text, input:password, input:file, select, textarea').val('');
+<% else %>
+  $("#registration_error").html("<div class='alert'><%= j errors_for(resource) %></div>")
+<% end %>

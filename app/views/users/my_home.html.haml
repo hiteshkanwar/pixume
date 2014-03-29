@@ -1,0 +1,6 @@
+= metamagic :title => "Pixsume Visual Resume: Welcome"
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }

@@ -1,0 +1,6 @@
+<% if @education.errors.blank? %>
+  $("#educations_list").html("<%= j render('educations/list', :educations => @user.educations) %>")
+	$("#education_msg").html("<%= j flash_ajax_msg('success', 'Education deleted successfully') %>")
+<% else %>
+	$("#education_msg").html("<%= j errors_for(@education) %>")
+<% end %>

@@ -1,0 +1,21 @@
+%input{:name => "radio", :type => "radio", :value => "true"} 
+
+=@location.city
+-if !@location.city.blank?
+	=","
+
+=@location.state
+-if !@location.state.blank?
+	=","
+
+=@location.country
+
+= hidden_field_tag :zip, @location.zip 
+= hidden_field_tag :city, @location.city 
+= hidden_field_tag :state, @location.state 
+= hidden_field_tag :country, @location.country 
+= hidden_field_tag :lat, @location.lat 
+= hidden_field_tag :long, @location.lng  
+
+
+

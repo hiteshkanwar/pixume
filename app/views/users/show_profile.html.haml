@@ -1,0 +1,221 @@
+= metamagic :title => "Pixsume Visual Resume | show"
+:css
+  .topInfo {
+    border: none;
+    margin-bottom: 0px;
+  }
+
+  .topInfo .labelCont{
+    font-size: 14px;
+  }
+  
+  .topInfo input[type="text"] {
+    width: 90%;
+    height: 30px;
+    margin-bottom: 0px;
+  }
+  
+  .hero-unit p {
+    font-size: 12px ;
+    font-weight: normal;
+    line-height: 18px ;
+  }
+  
+  table th {
+    font-weight: bold;
+  }
+
+  table td {
+    vertical-align: middle;
+  }
+
+  .careerSnap h4 {
+    color: #0088CC;
+    margin-top: 2px;
+  }
+
+  .careerSnap table td {
+    vertical-align: top;
+  }
+
+%section#body.inner
+  %section.container.pro
+    %h1{:style => "float:left;"}
+      Showing #{@users.count} Candidates for "#{@job_posting.title}"
+    .hero-unit.infoBox.final
+      .form_hide
+        
+        .topInfo{:style => "border: none; margin-bottom: none;float:right;"}
+          %form{:action => show_profile_path, :method => "get", :name => "short_user"}
+            %table{:border => "0", :cellpadding => "6", :cellspacing => "4", :width => "100%"}
+              %tr{:width => "100%"}
+                %td
+                  %input{:type => "text", :name => "criteria", :id => "criteria", :maxlength => 150, :value => params[:criteria],:style=>"display: none;"}
+                  Please select for sort
+                  = select_tag :sort, options_for_select(User.sort_user), :required => true, :class => 'sort', :id=>params[:job_posting_id],:prompt => "Resume Rating"
+                  %input{:type => "hidden", :name => "q", :id => "q", :value => "1"}
+
+                %td
+                  /= submit_tag "Sort User", :class => "btn dropdown-toggle", :style => "height: 28px; line-height: 28px important!; margin-bottom: 0px;", :onclick => "this.form.submit();"
+
+      - if !params[:job_posting_id].blank?
+
+        .careerSnap
+          %h2
+            %span
+              = "Candidate Profile/s"
+          - usersCnt = 0
+          - usersCnt1 = 0
+          
+          - unless @users.blank?
+            - @users.each do |user|
+                 
+              - unless user.visited_profile.blank?
+                - usersCnt = usersCnt + 1
+              - unless user.published_profile.blank?
+                - usersCnt1 = usersCnt + 1   
+          - if usersCnt > 0 || usersCnt1 > 0
+            %table{:border => "0", :cellpadding => "6", :cellspacing => "4", :width => "100%"}
+              - @users.each_with_index do |user, index|
+
+                
+                  	           
+                - bg_color = "#EAF2D3"
+                - if index.even?
+                  - bg_color = "LightYellow"
+                %tr{:width => "100%", :style => "background: #{bg_color}"}
+                  %td{:rowspan => 2}
+                    = image_tag(user.profile_image(:thumb), :alt => "", :class => 'profImg', :style => "border: none; margin: 0;")
+                  %td{:width => "30%"}
+                    %h4= user.name
+                  %td{:width => "50%"}
+                    %p{:style => "margin-top: -6px;"}
+                      - social_rating = 0
+                      - unless user.get_social_rating.blank?
+                        - social_rating = user.get_social_rating
+
+                      - resume_rating = 0
+                      - course_score = 0
+                      - school_score = 0
+                      - exp_score = 0
+                      - unless user.get_course_score.blank?
+                        - course_score = user.get_course_score
+                      - unless user.get_school_score.blank?
+                        - school_score = user.get_school_score
+                      - unless user.get_exp_score.blank?
+                        - exp_score = user.get_exp_score
+
+                      - resume_rating = ( ( course_score * 30 ) + ( school_score * 20 ) + ( exp_score * 50 ) ) / 100
+                      
+                      %div
+                        %div{:style => "float: left; margin-right: 30px;"}
+                          %span{:style => "font-weight: bold; color: #0088CC;"}= "Social Rating: #{social_rating.round(1)}"
+                          %div.rating{:"data-score" => "#{social_rating.round(1)}"}
+                        %div{:style => "float: left; "}
+                          %span{:style => "font-weight: bold; color: #0088CC;"}= "Resume Rating: #{resume_rating.round(1)}"
+                          %div.rating{:"data-score" => "#{resume_rating.round(1)}"}
+                      
+                  %td{:rowspan => 2}
+                    / %input{:type => "button", :value => "View Pixsume", :class => "btn dropdown-toggle", :style => "height: 28px; line-height: 28px important!; margin-bottom: 0px;",:onclick => "window open='#{public_pixsume_url(user.profile_name)}'; " }
+                    /%a{href: "#{public_pixsume_url(user.profile_name)}",:target => '_blank',:class=>"btn btn-success new_tab"} View Pixsume
+                    - user_agent = UserAgent.parse(request.env["HTTP_USER_AGENT"])
+                    - if user_agent.browser== "Chrome"
+                      
+                      = link_to "View Pixsume",public_pixsume_url(user.profile_name),:class=>"btn btn-success new_tab"
+                    - else
+                      = link_to "View Pixsume",public_pixsume_url(user.profile_name),:class=>"btn btn-success new_tab" 
+                   
+                    
+                %tr{:width => "50%", :style => "background: #{bg_color}"}
+                  %td{:width => "40%", :colspan => 2}
+                    %p{:style=>"float: left; "}
+                      - unless user.experiences.blank?
+                        - experiences = user.experiences
+                        - @count=0
+                        - @count1=0
+                        - experiences.each do |experience|                                                   
+                         
+                          - if experience.to_year.blank?                              
+                            - exp_to_year=Time.now.strftime('%Y').to_i
+                            - exp_experience = exp_to_year - experience.from_year.to_i
+                            - @count = @count + exp_experience
+                          - else
+                            - exp_experience = experience.to_year.to_i - experience.from_year.to_i  
+                            - @count1 = @count1 + exp_experience
+                            
+                          - if experience.is_current?
+                            Current Company:
+                            = experience.company_name 
+                        %br    
+                        Experience:
+                        #{@count1 + @count} years    
+                        %br
+                    %p{:style=>"float:right; margin: 0px 175px;",:class=>"job_app"}    
+                      - @jobs_application.each do |job_app|
+                        - if job_app.user_id == user.id
+                          Salary Expectation :
+                          - if !job_app.currency.nil?
+                            #{job_app.currency}
+                            #{job_app.expected_salary}
+                          - else
+                            $#{job_app.expected_salary}
+                          %br
+                          Availabilty:
+                          #{job_app.availablity} weeks
+          - else
+            %p= "There are no matching results!"
+:javascript
+  $(document).ready(function(){
+    var criteria = $('input[id=criteria]').val();
+    if (criteria != "") {
+      $(".highlight").css({ backgroundColor: "red" });
+      $("body h4").highlight(criteria);
+      $("body p").highlight(criteria);
+    }
+
+    $(".rating").raty({
+      score: function() {
+
+        return $(this).attr('data-score');
+      },
+      readOnly: true
+    });
+  });
+
+
+  $( ".sort" ).change(function () {
+  var job_posting_id = $(this).attr("id");
+  
+
+  var str = $( "select option:selected" ).text();
+  $.ajax({
+      url: "#{show_profile_path}",
+      data: {data: str,job_posting_id: job_posting_id}
+    });
+  });
+
+.change()
+
+:css
+  .new_tab
+     {
+        
+        font-family: 'OpenSansSemibold';
+        font-size: 14px !important;
+        height: 24px;
+        line-height: 24px !important;
+        margin-bottom: 15px;
+        padding: 0 1px !important;
+    }
+    
+     
+    
+  @-moz-document url-prefix() {
+    .job_app{
+      float:right;
+      margin: 0px 160px !important;
+      }
+    }
+
+
+

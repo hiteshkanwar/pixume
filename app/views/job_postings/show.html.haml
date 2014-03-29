@@ -1,0 +1,289 @@
+
+
+- model_class = JobPosting
+= metamagic :title => "I am hiring! #{@job_posting.title}"
+:css
+  #body.inner .infoBox h2 {
+    text-transform: none;
+  }
+  .careerSnap p {
+    font-family: 'OpenSansRegular' !important;
+    font-size: 14px !important;
+    line-height: 18px;
+    color: #707070;
+    word-wrap: break-word;
+    white-space: -moz-pre-wrap;
+    white-space: pre-line;
+  }
+%script{:src => "http://w.sharethis.com/button/buttons.js", :type => "text/javascript"}
+:javascript
+  var switchTo5x=false;
+
+  stLight.options({publisher: "d510ccea-1af2-4124-bffd-ab33e2bee438"});
+%section#body.inner
+  %section.container
+    
+    /- job_postings = @job_posting
+    %h1{:style => "float:left;"} 
+      = @job_posting.title
+    
+    .buttonCont{:style => 'width: 410px;'}
+      - if !current_user.nil?
+        - if current_user.role != "default"
+          = link_to 'Back', job_postings_path, :class => 'btn_Apply'
+        - @user = nil
+        - if current_user
+          - @user = current_user.id
+
+      - unless !show_apply_button(current_user)
+        - if !current_user.nil?
+          %a.btn{"data-toggle" => "modal", href: "#myModal1", role: "button", :class => "btn btn-success_Apply",:style=>"left: 86px;" ,:id=>"race"} Apply for Job
+        - else
+          - session[:return_to] = request.fullpath
+          / = link_to 'Apply for Job',user_session_path ,:class=>"btn btn-success_Apply",:style=>"left: -54px;"
+          %a.btn{"data-toggle" => "modal", href: "#myModal2", role: "button", :class => "btn btn-success_Apply",:style=>"left: 80px; " } Apply for Job
+        /= link_to 'Apply for Job', new_job_application_path(:job_posting_id => @job_posting.id, :user_id => @user ), :class => 'btn btn-success_Apply',:style=>"left: -54px;", :remote => 'true' 
+        / = link_to 'Apply for Job', '#', :class => 'btn btn-success_Apply model_1',:style=>"left: -54px;"
+      
+      .addthis{:style => 'padding: 0px;'}
+        -job_url1 = job_posting_url(params[:id])  
+        -job_url=request.fullpath
+        - @job_post = JobPosting.find(params[:id])
+        - @job_descript= @job_post.description
+        - job_id_post=params[:id]
+        %span.st_sharethis_large{:displaytext => "ShareThis", :"st_url" => "#{job_url}", :"st_title" => "", :"st_summary" => ""}
+        %span.st_facebook_large{:displaytext => "Facebook", :"st_url" => "#{job_url}",:"st_title" => "", :"st_summary" => ""}
+        %span.st_twitter_large{:displaytext => "Tweet", :"st_url" => "#{job_url1}", :"st_title" => "", :"st_summary" => ""}
+        
+        %span.st_linkedin_large{:displaytext => "LinkedIn", :"st_url" => "#{job_url1}", :"st_title" => "", :"st_summary" => "#{@job_descript}"}
+        %span.st_email_large{:displaytext => "Email", :"st_url" => "#{job_url1}", :"st_title" => "", :"st_summary" => ""}
+    .hero-unit.infoBox.final
+      .careerSnap
+        %h2
+          %span 
+            = "Job Description"
+        %p= @job_posting.description
+      .careerSnap
+        %h2
+          %span 
+            = "Key Requirements"
+        %p= @job_posting.requirements
+      - skillsets = JobPostingSkillSet.where(:job_posting_id => @job_posting.id)
+      - unless skillsets.blank?
+        .careerSnap
+          %h2
+            %span 
+              = "Key Skillsets"
+          - skillsets.each_with_index do |skillset, index|
+            - if index != 0
+              = ", "
+            = skillset.name
+      .careerSnap
+        %h2
+          %span 
+            = "About Company"
+        - company = Company.find(@job_posting.company_id)
+        %h4= company.company_name
+        %p= company.company_desc
+      %div{:width => '100%', :style => 'height: 15px;'}
+      %div{:width => '100%'}
+        %table{:width => '100%'}
+          %tr
+            %td{:width => '33%'}
+              %strong= "Salary: "
+              - unless @job_posting.salary.blank?
+                %span= "#{@job_posting.salary}"
+              - else
+                %span= "Not specified"
+            %td{:width => '33%'}
+              %strong= "Location: "
+              %span= "#{@job_posting.location}, #{@job_posting.country}"
+            %td{:width => '33%'}
+              %strong= "Experience: "
+              - exp = ''
+              - from_exp_exists = false
+              - if @job_posting.min_years_exp.blank? == false && @job_posting.min_years_exp.to_s.empty? == false
+                - exp = @job_posting.min_years_exp.to_s
+                - from_exp_exists = true
+              - if @job_posting.max_years_exp.blank? == false && @job_posting.max_years_exp.to_s.empty? == false
+                - if @job_posting.min_years_exp != @job_posting.max_years_exp
+                  - if from_exp_exists
+                    - exp += ' to '
+                  - exp += @job_posting.max_years_exp.to_s
+              - if exp != ''
+                %span= "#{exp} years"
+              - else
+                %span= "Not specified"
+      #myModal1.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);"}      
+        %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 26px;  width: 160px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Apply For this job
+      
+        .modal-body{:style=>"overflow-y:hidden;"}     
+
+          - if current_user
+            - @user = current_user.id
+          - if !current_user.nil?
+            = form_tag (job_applications_path),:remote=>true,:multipart=>true, :id=>"rusume_submit_1" do
+              %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+                %tr
+                  %td.labelCont Availability(In weeks)*
+                  %td
+                    = select_tag :availablity, options_for_select(JobApplication.availablity_weeks), :required => true, :class => 'span2',:prompt => "Please Select" ,:style=>"width: 198px;"
+                %tr
+                  %td.labelCont Expected Salary(Annual)
+                  %td
+                    %i.fa.fa-inr
+                   
+                    .input-prepend
+                       
+                      = select_tag :currency ,options_for_select([["CAD","$"],["GBP","£"],["INR","INR"]]), :prompt => 'USD',:style=>"width:78px;"
+                      = text_field_tag :expected_salary ,nil, :class => 'test_width ',:id=>"prependedInput", :maximum => 50 ,:style=>"width: 108px;"        
+                      
+                %tr
+                  %td.labelCont Why you are the best fit for this Job?*
+                  %td                         
+                    = text_area_tag :best_fit_for_job ,nil, :class => 'span2 ahead', :required => true, :style=>"height: 106px; width: 186px;",:maximum => 50, :placeholder => "Please briefly describe why you are the best fit for this job"
+                %tr{:class=>"attach_section"}
+                  %td.labelCont Attach your Resume(doc,docx,pdf)*
+                  %td     
+                    =file_field_tag :file 
+                 
+                    %span{:id=>'no_file_choosen_div'}
+                      No file chosen
+                %tr{:class=>"attach_section"} 
+                  %td  
+                    #msg{:style=>"color:red"}
+
+                = hidden_field_tag "flag","true" 
+                = hidden_field_tag "job_posting_id",@job_posting.id              
+                = hidden_field_tag "user_id",current_user.id
+
+              .actions{:style=>"float:left;"}
+                = submit_tag 'Done' ,:class=>"btn btn-success",:id=>"job_post",:style=>"margin-top: 15px; margin-left: 320px;"
+              %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right;margin-top: 15px; margin-right: 35px;",:id=>"model_close"} Cancel      
+      #myModal2.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 121px; border-width: 3px; border-color: rgb(26, 185, 240);"}
+
+   
+        .modal-body
+          %b To Apply for this job,Please login to Pixsume or create a new account
+        %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"margin-left: 416px; margin-bottom: 11px;padding-left: 24px; padding-right: 33px",:id=>"red"} Ok
+
+    .buttonCont{:style => 'width: auto'}
+      - if !current_user.nil?
+        - if current_user.role != "default"  
+          = link_to 'Back', job_postings_path, :class => 'btn'
+      - unless !show_apply_button(current_user)
+       
+        %a.btn{"data-toggle" => "modal", href: "#", role: "button", :class => "btn btn-success_Apply",:style=>"left: 0px;" ,:id=>"race"} Apply for Job 
+      /= link_to 'Apply for Job', '#', :class => 'btn btn-success'
+    %div{:width => '100%', :style => 'height: 15px;'}
+  -if !current_user.nil? 
+    -flag=!current_user.resume_files.last.nil?   
+:css
+  #best_fit_for_job
+  {
+    font-size : 14px;
+  }
+  .add-on {
+    height: 16px !important;
+  }
+  #cboxClose{
+    margin-top: -56px !important;
+  }
+  .test_width {
+    width: 127px;
+  }
+:javascript
+  $(":file").filestyle();
+  $(":file").filestyle({buttonText: "Choose File"});
+  $(".input-large").hide();
+  $("#file").change(function(){
+  $("#no_file_choosen_div").hide()
+  });
+
+  if ("#{flag}" =="true")
+  {
+    $(".attach_section").hide()
+  } 
+
+  $( document ).ready(function() {  
+
+    $( "#race" ).trigger( "click" );
+
+  
+  if("#{session[:flag]}"=="true"){
+  
+  
+  "#{session[:flag]=""}"
+    
+    if ("#{logged_in?}")
+    {
+      
+     
+      if ("#{@values}" != "applied")
+      {
+
+        $.colorbox({
+        html: "<div class='hero-unit' style='padding:10px; height:120px'><div><b>Congratulations!!! Your have applied for this job.</b></div></div>", width: "500px", close: "Ok"
+        });
+        $("#cboxClose").click(function(){
+        window.location="#{pixsume_path}"
+        })
+       
+      }
+      else
+      { 
+       $(".modal-backdrop,#myModal1").hide();
+        $.colorbox({
+
+        html: "<div class='hero-unit' style='padding:10px; height:120px'><div><b> Your have already applied for this job.</b></div></div>", width: "500px", close: "Ok"
+        });
+        $("#cboxClose").click(function(){
+        window.location="#{pixsume_path}"
+        })
+       }
+    } 
+    else
+    {
+      $.colorbox({
+      html: "<div class='hero-unit' style='padding:10px; height:120px'><div><b>Please login to apply for this job</b></div></div>", width: "500px", close: "Ok"     });
+
+  
+    }
+  }
+
+  });
+  
+  $("#red").click(function(){
+   window.location.href = '#{user_session_path}'
+  }) 
+  $(".add-on").click(function(){
+
+
+  }) 
+
+
+
+  $("#rusume_submit_1").submit(function()
+  {
+
+
+  var ext = $("#file").val().split('.').pop().toLowerCase();
+  if ($("#file").val()!="")
+  {
+    if($.inArray(ext, ['pdf','doc','docx']) == -1) {
+
+    $('#msg').html('<span class="LV_validation_message LV_invalid">Only (doc,docx,pdf)* Accepted .</span>');
+    return false;
+    }
+    else
+    {
+    $('#msg').html('<span class="LV_validation_message LV_invalid"></span>');
+    return success;
+    }
+  }
+  
+  
+  }); 
+
+
+

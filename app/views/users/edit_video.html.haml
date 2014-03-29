@@ -1,0 +1,32 @@
+:css
+  #cboxClose{
+    font-size: 14px;
+    bottom: 27px;
+  }
+%h2
+  %span My Video
+
+.hero-unit
+  = form_for @user, :remote => true do |f|
+    %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+      %tr
+        %td{:colspan => "2", :align => "center"}
+          .video_blank
+            - unless @user.video_url.blank?
+              - video_url = @user.video_url
+              - if video_url =~ /youtube/
+                - video_id = video_url.match(/(youtu\.be\/|youtube\.com\/((watch|ytscreeningroom)\?(.*&)?v=|(embed|v|.*\/?)\/))([^\?&"'>]+)/)[6]
+                %iframe{ :width => "293",  :height => "160", :src => "http://www.youtube.com/embed/#{video_id}", :frameborder => "0", :allowfullscreen => true}
+              - else
+                %video{ :width => "293",  :height => "160", :src => "#{video_url}", :controls => "controls", :autobuffer => "autobuffer", :tabindex => "0"}
+            
+      %tr
+        %td.labelCont Video Link
+        %td
+          = f.text_field :video_url, :placeholder => "http://youtu.be/OolDzztYwtQ"
+          %p e.g http://youtu.be/OolDzztYwtQ
+      %tr
+        %td &nbsp;
+        %td
+          = hidden_field_tag :update_div, 'video'
+          = f.submit "Done", :class => "btn btn-success dropdown-toggle"

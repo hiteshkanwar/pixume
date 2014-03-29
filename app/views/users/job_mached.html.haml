@@ -1,0 +1,58 @@
+%html{:lang => "en"}
+
+  %body
+   
+    %section#body.inner
+      %section.container
+         
+        %div{:style=>''}
+          %h3{:style=>"width: 200px; float: left;"}
+            %span 
+
+              = "Suggested Job"
+          
+          %div{:style=>"float:right;margin-top: 21px;"}    
+            = select_tag :sort, options_for_select(:Skill=>"skill",:City=>"city",:Title=>"title"),:class => 'sort'
+            = text_field_tag :search, nil, :value => "#{@zip}", :style=>"",:placeholder=>"Search jobs"      
+        .hero-unit.infoBox.final
+          .mached_job 
+            -@job_main_array.each do |job|
+
+              %p{:style=>"border: medium none;color: #0088CC;font-family: 'OpenSansRegular'; font-size: 18px; font-weight: bold; margin: 0;padding: 0;"}    
+                / %a{:data_remote=>"true",:href => "#{job_detail_path(:id=>job.id)}" }
+                =link_to ("#{job.title}"),job_detail_path(:id=>job.id),:remote=>true, :class=>"member"
+                  
+              &nbsp;
+              =job.description
+              
+              %hr
+
+            -if @job_main_array.blank?   
+              %h5
+                %span 
+
+                  = "We don't have any matching jobs at this time, please check later"
+          
+             
+
+
+
+:javascript
+
+  $('document').ready(function()
+  {
+
+    $('#search').keyup(function(){
+      var value = $('#sort option:selected').text()
+      var key = $('#search').val()
+      $.ajax({
+        type: "POST",
+        url: "/jobs/results",
+        data: {value: value,key: key},
+        
+      });
+    });
+
+  });                            
+
+

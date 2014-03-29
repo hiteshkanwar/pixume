@@ -1,0 +1,308 @@
+:javascript
+  if (window.opener && !window.opener.closed) {
+    window.opener.location = "/";
+    window.close();
+  }
+  var switchTo5x=false;
+%script{:src => "http://w.sharethis.com/button/buttons.js", :type => "text/javascript"}
+:javascript
+  stLight.options({publisher: "ur-35e1275a-7e3-4b45-4986-f97abe2355f6"});
+:javascript
+  $(function() {
+    $('.achievement a').tooltip({
+      showURL: false,
+    });
+  });
+
+  $(function() {
+    $('.timeBar a').tooltip({
+      showURL: false,
+    });
+  });
+
+%section#body.inner
+  %section.container
+    %h1{:style => "float:left;"} 
+      = @user.name
+      = "- #{@user.position}" unless @user.position.blank?
+    .buttonCont
+      - if user_signed_in? && @user.id == current_user.id
+        .btn-group
+          %button.btn.btn-success.dropdown-toggle{"data-toggle" => "dropdown"}
+            Export Resume
+            %span.caret
+          %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu", :role => "menu"}
+            %li
+              %a{:href => "#", :tabindex => "-1"} Export to Word
+            %li
+              %a{:href => "#", :tabindex => "-1"} Export to PDF
+        %a.edit{:href => profile_url} Edit
+      
+      .addthis
+        %span.st_sharethis_large{:displaytext => "ShareThis"}
+        %span.st_facebook_large{:displaytext => "Facebook"}
+        %span.st_twitter_large{:displaytext => "Tweet"}
+        %span.st_linkedin_large{:displaytext => "LinkedIn"}
+        %span.st_pinterest_large{:displaytext => "Pinterest"}
+        %span.st_email_large{:displaytext => "Email"}
+    .hero-unit.infoBox.final
+      .topInfo
+        = image_tag(@user.profile_image(:thumb), :alt => "", :class => 'profImg')
+        .description
+          %p.basic
+            %span.mail
+              = @user.email
+            %span.phone
+              = @user.phone.blank? ? "N. A." : @user.phone
+          - unless @user.summary.blank?
+            - user_summary = @user.summary
+            - if user_summary.length > 100
+              %div.summary{:id => "summary_part"}
+                = user_summary[0..99]
+                %div{:style => "height:2px;margin:0;padding:0"}
+                %a.showhide{:id => "summary_show_more", :style => "cursor:pointer; white-space:normal"} Show more
+              %div.summary{:id => "summary_full", :style => "display: none !important"}
+                = user_summary
+                %div{:style => "height:2px;margin:0;padding:0"}
+                %a.showhide{:id => "summary_show_less", :style => "cursor:pointer; white-space:normal"} Show less
+              :javascript
+                $(document).ready(function(){
+                  $("#summary_show_more").click(function(){
+                    $("#summary_part").css("display: none !important");
+                    $("#summary_part").hide("slow", function() {
+                      $("#summary_full").css("display: block !important");
+                      $("#summary_full").show("slow");
+                    });
+                  });
+                  
+                  $("#summary_show_less").click(function(){
+                    $("#summary_full").css("display: none !important");
+                    $("#summary_full").hide("slow", function() {
+                      $("#summary_part").css("display: block !important");
+                      $("#summary_part").show("slow");
+                    });
+                  });
+                })
+            - else
+              %div.summary
+                = user_summary
+        .rating
+          %h3 Resume Rating
+          %p Social Rating : 7/10
+          .rateCont
+            .box.active
+            .box.active
+            .box.active
+            .box.active
+            .box.active
+            .box.active
+            .box.active
+            .box
+            .box
+            .box
+          %p Comparision Rating : 3/10
+          .rateCont
+            .box.active
+            .box.active
+            .box.active
+            .box
+            .box
+            .box
+            .box
+            .box
+            .box
+            .box
+      .careerSnap
+        %h2
+          %span 
+            - if user_signed_in?
+              = "My Career Snapshot"
+            - else
+              = @user.name + "'s Career Snapshot"
+        - exp_segments = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth"]
+        .snapCont
+          - unless @user.experiences.blank?
+            - curTime = Time.new
+            - exp_min_year = 0
+            - exp_max_year = 0
+            - exp_min_month = 0
+            - exp_max_month = 0
+            - exp_total_duration = 0
+            - toggle = 0
+            - experiences = @user.experiences.sort { |a,b| b.from_year.to_i <=> a.from_year.to_i }
+            - experiences.each do |experience|
+              - if exp_min_year == 0
+                - exp_min_year = experience.from_year.to_i
+              - if exp_min_year > experience.from_year.to_i
+                - exp_min_year = experience.from_year.to_i
+                - exp_min_month = experience.from_month.to_i
+              - if experience.to_year.to_i == 0 
+                - exp_max_year = curTime.year 
+                - exp_max_month = curTime.month 
+              - if exp_max_year < experience.to_year.to_i
+                - exp_max_year = experience.to_year.to_i
+                - exp_max_month = experience.to_month.to_i
+            - if exp_min_year == exp_max_year
+              - exp_total_duration = exp_max_month - exp_min_month
+            - else
+              - exp_total_duration = (12 - exp_min_month) + ( ((exp_max_year - exp_min_year) - 1) * 12 ) + exp_max_month
+            - experiences.each do |experience|
+              - exp_duration = 0
+              - exp_start = 0
+              - exp_end_month = experience.to_month.to_i
+              - exp_end_year = experience.to_year.to_i
+              - if exp_end_month == 0
+                - exp_end_month = curTime.month
+              - if exp_end_year == 0 
+                - exp_end_year = curTime.year
+              - if experience.from_year.to_i == exp_end_year 
+                - exp_duration = exp_end_month - experience.from_month.to_i
+                - exp_start = exp_end_month - exp_min_month
+              - else
+                - exp_duration = (12 - experience.from_month.to_i) + ( ((exp_end_year - experience.from_year.to_i) - 1) * 12 ) + exp_end_month
+                - exp_start = (12 - exp_min_month) + ( ((exp_end_year - exp_min_year) - 1)  * 12 ) + experience.from_month.to_i
+              - per_width = (exp_duration * 100) / exp_total_duration;
+              - per_left = (exp_start * 100) / exp_total_duration;
+              - if toggle == 0
+                - toggle = 1 
+                .infoTop{:style => "left: #{per_left - 10}%;", ":start" => "#{exp_start}", ":dur" => "#{exp_duration}"}
+                  %h3 #{experience.company_name}
+                  %p #{experience.designation}
+              - else
+                - toggle = 0 
+                .infoBot{:style => "left: #{per_left - 10}%;"}
+                  %h3 #{experience.company_name}
+                  %p #{experience.designation}
+          .timeBar
+            - seg_idx = 0
+            - experiences.reverse_each do |experience|
+              - exp_duration = 0
+              - exp_start = 0
+              - exp_end_month = experience.to_month.to_i
+              - exp_end_year = experience.to_year.to_i
+              - if exp_end_month == 0
+                - exp_end_month = curTime.month
+              - if exp_end_year == 0 
+                - exp_end_year = curTime.year
+              - if experience.from_year.to_i == exp_end_year 
+                - exp_duration = exp_end_month - experience.from_month.to_i
+                - exp_start = exp_end_month - exp_min_month
+              - else
+                - exp_duration = (12 - experience.from_month.to_i) + ( ((exp_end_year - experience.from_year.to_i) - 1) * 12 ) + exp_end_month
+                - exp_start = (12 - exp_min_month) + ( ((exp_end_year - exp_min_year) - 1)  * 12 ) + experience.from_month.to_i
+              - per_width = (exp_duration * 100) / exp_total_duration
+              - per_left = (exp_start * 100) / exp_total_duration
+              - seg_name = exp_segments[seg_idx]
+              %div{:class => "#{seg_name}", :style => "width: #{per_width}%;"}
+                %a{:href => "#", :title => "#{experience.description}"}
+              - seg_idx += 1
+          .timeline
+            - year_width = (1 * 100) / ((exp_max_year - exp_min_year) +1)
+            %ul
+              - ((exp_min_year)..exp_max_year).each do |i|
+                %li{:style => "width: #{year_width}%; padding: 0; text-align: center;"} #{i}
+            %p December #{(exp_min_year-1)}
+      .achievement
+        %h2
+          %span
+            - if user_signed_in?
+              = "My Achievements"
+            - else
+              = @user.name + "'s Achievements"
+        - unless @user.achievements.blank?
+          - achievements = @user.achievements
+          - achievements.each_with_index do |achievement, index|
+            - icon_img = AchievementCategory.get_icon_image(achievement.category)
+            - if index.even?
+              %p
+                %a{:href => "#", :title => "#{achievement.description}"}
+                  %img{:alt => "", :src => "/assets/#{icon_img}"}
+                  %span #{achievement.achievement}%
+                  #{achievement.category}
+            - else
+              %p.alt
+                %a{:href => "#", :title => "#{achievement.description}"}
+                  %img{:alt => "", :src => "/assets/#{icon_img}"}
+                  %span #{achievement.achievement}%
+                  #{achievement.category}
+      .skills
+        %h2
+          %span
+            - if user_signed_in?
+              = "My Skill Sets"
+            - else
+              = @user.name + "'s Skill Sets"
+        .skillCont
+          %section#options{:class => "clearfix"}
+            %ul{:id => "filters", :class => "option-set clearfix", :"data-option-key" => "filter"}
+              %li
+                %a{:href => "#filter", :"data-option-value" => "*", :class => "selected"}
+                  All
+              %li
+                %a{:href => "#filter", :"data-option-value" => ".beginner"}
+                  Basic
+              %li
+                %a{:href => "#filter", :"data-option-value" => ".intermediate"}
+                  Intermediate
+              %li
+                %a{:href => "#filter", :"data-option-value" => ".advanced"}
+                  Advanced
+              %li
+                %a{:href => "#filter", :"data-option-value" => ".expert"}
+                  Expert
+          %div{:id => "skillcontainer", :class => "clickable clearfix"}
+            - unless @user.skill_sets.blank?
+              - skill_sets = @user.skill_sets.sort! { |a,b| b.expertise_level_id <=> a.expertise_level_id }
+              - skill_sets.each_with_index do |skill_set, index|
+                - break if index > 9
+                - expertise_level_id = skill_set.expertise_level_id
+                - expertise_level_width = (expertise_level_id + 1) * 25;
+                %div{:class => "skill #{skill_set.expertise_level.downcase}", :"data-symbol" => "", :"data-category" => "#{skill_set.expertise_level.downcase}"}
+                  %p{:class => "number"} &nbsp;
+                  %h3{:class => "symbol"} &nbsp;
+                  %h2{:class => "name"} #{skill_set.name}
+                  %p{:class => "weight"} &nbsp;
+:javascript
+  $(document).ready(function(){
+    var $container = $('#skillcontainer');
+    $container.imagesLoaded(function() {
+      $('#skillcontainer').isotope({
+        // options
+        itemSelector : '.skill',
+        layoutMode : 'fitRows'
+      }, 
+      function( $items ) {
+        var id = this.attr('id'),
+        len = $items.length;
+      });
+
+      var $optionSets = $('#options .option-set'), $optionLinks = $optionSets.find('a');
+      $optionLinks.click(function() {
+        var $this = $(this);
+        // don't proceed if already selected
+        if ( $this.hasClass('selected') ) {
+          return false;
+        }
+        var $optionSet = $this.parents('.option-set');
+        $optionSet.find('.selected').removeClass('selected');
+        $this.addClass('selected');
+    
+        // make option object dynamically, i.e. { filter: '.my-filter-class' }
+        var options = {},
+        key = $optionSet.attr('data-option-key'),
+        value = $this.attr('data-option-value');
+        // parse 'false' as false boolean
+        value = value === 'false' ? false : value;
+        options[ key ] = value;
+        if ( key === 'layoutMode' && typeof changeLayoutMode === 'function' ) {
+          // changes in layout modes need extra logic
+          changeLayoutMode( $this, options )
+        } else {
+          // otherwise, apply new options
+          $container.isotope( options );
+        }
+    
+        return false;
+      });
+    });
+  });

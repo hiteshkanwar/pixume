@@ -1,0 +1,361 @@
+
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}
+      = metamagic :title => "#{@user.name} Visual Resume"      
+      %link{:href => "http://www.pixsume.com/assets/application-ae814b2d078d6186694d2b0b0ae38fb5.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
+      %script{:src => "http://www.pixsume.com/assets/application-35ed2e56cff7b1085588521456434a60.js", :type => "text/javascript"}
+     
+  %body
+   
+    %section#body.inner
+      %section.container
+        .pixsume_skill_set
+
+          %h1{:style => "float:left;"} 
+            = @user.name
+            = "- #{@user.position}" unless @user.position.blank?
+          
+          .hero-unit.infoBox.final{:style=>"border: medium none;"}
+            .topInfo
+              -if !params[:Sumr].nil?
+                .description{:style=>"margin-left: -13px;"}
+                  %p.basic
+                    %span.mail
+                      = @user.email
+                    %span.phone
+                      = @user.phone.blank? ? "N. A." : @user.phone
+                    %p.address{:style=>"color: #000000; font-size:15px;"}
+                      -if !@user.user_location.last.blank?
+                        
+                        = image_tag("http://www.pixsume.com/assets/images/location.png", :border => 0,:style=>"width:18px; margin-top: 10px;") 
+                        &nbsp;
+                        = @user.user_location.last.city
+                        -if !@user.user_location.last.city.blank?
+                          =","
+                        =@user.user_location.last.state 
+                        =","
+                        =@user.user_location.last.country        
+                 
+                   
+                    -if !@user.summary.blank?
+                      
+                      - unless @user.summary.blank?
+                        - user_summary = @user.summary
+                        
+                        %p3.summary{:id => "summary_full", :style => "!important;"}
+                          = user_summary
+                    
+                    
+                 
+
+            .careerSnap
+              - unless @user.experiences.blank?
+                - show_snapshot = 0
+                - curTime = Time.new
+                - exp_min_year = 0
+                - exp_max_year = curTime.year
+                - exp_total_duration = 0
+                - experiences = @user.experiences.sort { |a,b| b.from_year.to_i <=> a.from_year.to_i }
+                - experiences.each do |experience|
+                  - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+                  - if exp_min_year == 0
+                    - exp_min_year = experience.from_year.to_i
+                  - if exp_min_year > experience.from_year.to_i
+                    - exp_min_year = experience.from_year.to_i
+                - if exp_min_year != 0
+                  -if !params[:Cs].nil?
+                    %p{:style=>"border: medium none;color: #0088CC;font-family: 'OpenSansRegular'; font-size: 18px; font-weight: bold; line-height: 40px; margin: 0;padding: 0;"}
+                      
+                      = "My Career Snapshot"
+                        
+                    - exp_segments = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth"]
+                    
+                    %h6
+                      %span{:style => "font-weight: bold; color: #0088CC;"} Experience: 
+                      = @total_exp 
+                      years 
+                      %span{:style => "font-weight: bold; color: #0088CC;"}| Worked for:
+                      = @number_of_companies
+                      Companies
+                      
+                    .snapCont
+                      - exp_total_duration_months = ( ( exp_max_year - exp_min_year ) + 1 ) * 12
+                      - total_width = 600
+                      - per_month_width = ( total_width / exp_total_duration_months ).round
+                      .timeBar
+                        - seg_idx = -1
+                        - toggle = 0
+                        - experiences.reverse_each do |experience|
+                          - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+                          - from_month = experience.from_month.to_i
+                          - from_year = experience.from_year.to_i
+                          - to_month = experience.to_month.to_i
+                          - to_year = experience.to_year.to_i
+                          - if from_month == 0
+                            - from_month = 1
+                          - if to_month == 0
+                            - to_month = 12
+                          - if experience.is_current
+                            - to_month = curTime.month
+                            - to_year = curTime.year
+                          - exp_duration_months = ( ( to_year - from_year ) + 1 ) * 12
+                          - exp_duration_months = exp_duration_months - ( from_month - 1)
+                          - exp_duration_months = exp_duration_months - ( 12 - to_month )
+                          - start_point = ( ( from_year - exp_min_year ) * 12 ) + ( from_month - 1)
+                          - end_point = ( start_point + exp_duration_months )
+                          - start_point = ( start_point * per_month_width ).round
+                          - end_point = ( end_point * per_month_width ).round
+                          - seg_idx += 1
+                          - seg_name = exp_segments[seg_idx]
+                          /= " Testing from_month = #{from_month} | from_year = #{from_year} | to_month = #{to_month} | to_year = #{to_year} | exp_duration_months = #{exp_duration_months} | start_point = #{start_point} | end_point = #{end_point} | exp_total_duration_months = #{exp_total_duration_months} | exp_min_year = #{exp_min_year} | exp_max_year = #{exp_max_year} | per_month_width = #{per_month_width}"
+                          %div{:class => "#{seg_name}", :style => "position: absolute; left: #{start_point}px; width: #{end_point - start_point}px; cursor: pointer;", :title => "#{experience.company_name} | #{experience.designation}\n#{experience.description}"}
+                            - if toggle == 0
+                              - toggle = 1
+                              .infoBot{:style => "position: relative; left: 10px; height: 125px;"}
+                                %p #{experience.designation}
+                            - else
+                              - toggle = 0
+                              .infoTop{:style => "position: relative; left: 10px; height: 125px;"}
+                                %p #{experience.designation}
+                      .timeBar
+                        - seg_idx = -1
+                        - prev_seg_idx = -1
+                        - seg_reg_idx = -1
+                        - exp_comp_name = "B "
+                        - experiences.reverse_each do |experience|
+                          - next if (experience.from_year.to_i == 0 || (experience.to_month.to_i == 0 and experience.to_year.to_i == 0 and experience.is_current == 0))
+                          - from_month = experience.from_month.to_i
+                          - from_year = experience.from_year.to_i
+                          - to_month = experience.to_month.to_i
+                          - to_year = experience.to_year.to_i
+                          - if from_month == 0
+                            - from_month = 1
+                          - if to_month == 0
+                            - to_month = 12
+                          - if experience.is_current
+                            - to_month = curTime.month
+                            - to_year = curTime.year
+                          - exp_duration_months = ( ( to_year - from_year ) + 1 ) * 12
+                          - exp_duration_months = exp_duration_months - ( from_month - 1)
+                          - exp_duration_months = exp_duration_months - ( 12 - to_month )
+                          - start_point = ( ( from_year - exp_min_year ) * 12 ) + ( from_month - 1)
+                          - end_point = ( start_point + exp_duration_months )
+                          - start_point = ( start_point * per_month_width ).round
+                          - end_point = ( end_point * per_month_width ).round
+                          - comp_rst = exp_comp_name.casecmp experience.company_name
+                          - seg_reg_idx += 1
+                          - if comp_rst == 0
+                            - exp_comp_name = experience.company_name
+                          - else
+                            - seg_idx = seg_reg_idx 
+                            - exp_comp_name = experience.company_name
+                          - seg_name = exp_segments[seg_idx]
+                          %div{:class => "#{seg_name}", :style => "position: absolute; left: #{start_point}px; width: #{end_point - start_point}px; cursor: pointer; border-top:1px solid white;", :title => "#{experience.company_name}"}
+                            - if seg_idx != prev_seg_idx
+                              %span #{experience.company_name[0..29]}
+                          - prev_seg_idx = seg_idx
+                      .timeline
+                        - year_width = ( 12 * per_month_width ).round
+                        /= " width #{year_width}" 
+                        %ul
+                          - if exp_min_year != 0
+                            - years_count = exp_max_year - exp_min_year
+                            - (exp_min_year..exp_max_year).each do |i|
+                              - if ( years_count > 12 and ( i % 10 != 0 ) )
+                                %li{:style => "width: #{year_width}px; padding: 0; text-align: center;"} #{i.to_s[2..3]}
+                              - else
+                                %li{:style => "width: #{year_width}px; padding: 0; text-align: center;"} #{i}
+                            %li{:style => "color: #787878; width: 1px; padding: 0; text-align: center;"}= "."
+            
+            -if !params[:Ach].nil?
+              .achivements              
+              - if !@user.achievements.blank?          
+                %hh{:style=>"border: medium none;color: #0088CC;font-family: 'OpenSansRegular'; font-size: 18px; font-weight: bold; margin: 0;padding: 0;"} My Achievements
+                %br
+                %br
+             
+                - current_user.achievements.each do |achievement|
+                  
+                  %pp{:style=>"color: #000000; font-size: 14px !important;  line-height: 18px !important;"}
+                    = achievement.title
+                    =":"
+                    &nbsp;
+                    
+                  = achievement.description
+                  %br
+                  %br
+
+
+
+             
+            %p
+            -if !params[:Skl].nil?
+              -if !@user.skill_sets.blank?    
+                .skills
+                  %p{:style=>"border: medium none;color: #0088CC;font-family: 'OpenSansRegular'; font-size: 18px; font-weight: bold; margin: 0;padding: 0;"} My Skill Sets
+                  %br
+                  .skillCont{:style=>"border:none;"}
+                    %section#options{:class => "clearfix"}
+                      %ul{:id => "filters", :class => "option-set clearfix", :"data-option-key" => "filter"}
+                        %li
+                          %a.top12{:href => "#filter", :"data-option-value" => ".top"}
+                            Top
+                        %li
+                          %a.all{:href => "#filter", :"data-option-value" => ".top, .add"}
+                            All
+                        %li
+                          %a.expert{:href => "#filter", :"data-option-value" => ".expert"}
+                            Expert
+                        %li
+                          %a.advanced{:href => "#filter", :"data-option-value" => ".advanced"}
+                            Advanced
+                        %li
+                          %a.intermediate{:href => "#filter", :"data-option-value" => ".intermediate"}
+                            Intermediate
+                        %li
+                          %a.beginner{:href => "#filter", :"data-option-value" => ".beginner"}
+                            Beginner
+                    %div{:id => "skillcontainer", :class => "clickable clearfix"}
+                      - skill_sets = @user.skill_sets.sort! { |a,b| b.expertise_level_id <=> a.expertise_level_id }
+                      - flag_add = "top"
+                      - skill_sets.each_with_index do |skill_set, index|
+                        - if index > 11
+                          - flag_add = "add"
+                        - expertise_level_id = skill_set.expertise_level_id
+                        - expertise_level_width = (expertise_level_id + 1) * 25;
+                        %div{:class => "skill #{skill_set.expertise_level.downcase} #{flag_add}", :"data-symbol" => "", :"data-category" => "#{skill_set.expertise_level.downcase}"}
+                          %p{:class => "number"} #{skill_set.expertise_level_id}
+                          %h3{:class => "symbol"} &nbsp;
+                          
+                          - if !Resource.all.collect(&:skill_set_id).include?(skill_set.id)
+                            =link_to "#{skill_set.name}",'#myModal14', :id=>skill_set.id, data: {toggle: "modal","id" => "#{skill_set.id}"},:class=>"open-AddResourceDialog name"
+                          - else
+                            - @res_available = Resource.where("skill_set_id = ?", skill_set.id)  
+                            - if !@res_available.blank?
+                              -if @res_available.first.approved == true
+                                =link_to "#{skill_set.name}","#",:class=>"resource_available_pixsume name",:id=>skill_set.id
+                              -else
+                                =link_to "#{skill_set.name}",'#myModal14', :id=>skill_set.id, data: {toggle: "modal","id" => "#{skill_set.id}"},:class=>"open-AddResourceDialog name"  
+                            - else
+                              =link_to "#{skill_set.name}",'#myModal14', :id=>skill_set.id, data: {toggle: "modal","id" => "#{skill_set.id}"},:class=>"open-AddResourceDialog name"    
+                   
+                          %p{:class => "weight"} &nbsp;
+            %p
+            -if !params[:Jd].nil?
+              -if !experiences.blank?
+                .experiance{:style=>"margin-top: 8%; float:left;"}
+                  %hh{:style=>"border: medium none;color: #0088CC;font-family: 'OpenSansRegular'; font-size: 18px; font-weight: bold; "} Job details
+                  %br
+                   
+                  %br
+                  - unless experiences.blank?
+                    #expCont
+                      #experience_msg
+                      - experiences = experiences.sort { |a,b| b.from_year.to_i <=> a.from_year.to_i || b.to_year.to_i <=> a.to_year.to_i || b.from_month.to_i <=> a.from_month.to_i || b.to_month.to_i <=> a.to_month.to_i}
+                      - experiences.each do |experience|
+                        .experiance
+                          .expTop
+                            %h3= experience.company_name
+                            %p1
+                              = experience.designation
+                              %span
+                                = Date::MONTHNAMES[experience.from_month.to_i]
+                                = experience.from_year
+                                - if experience.is_current
+                                  = "Current"
+                                - else
+                                  = Date::MONTHNAMES[experience.to_month.to_i]
+                                  = experience.to_year
+                            
+                          .expBot
+                            .content
+                              = simple_format(experience.description)
+              -if !params[:Ed].nil?
+                - if !@schools.blank?
+                  %hh{:style=>"border: medium none;color: #0088CC;font-family: 'OpenSansRegular'; font-size: 18px; font-weight: bold; margin: 0;padding: 0;"} Education
+                  %br
+                  %br 
+                #eduCont
+                  
+                  - current_user.educations.each do |education|
+                    .education
+                      %h3= education.institute
+                      %p1
+                        = education.course
+                        %br/
+                      %p2 
+                        = location_date(education.location, education.from_year, education.to_year)
+                      
+                    %br 
+            
+
+:css
+
+  .span {
+      background-color: #1AB9F0;
+      color: #FFFFFF;
+      display: inline-block;
+      padding: 0 8px;
+  }
+  .experiance h3 {
+    color: #0088CC;
+    font-family: 'OpenSansSemibold';
+    font-size: 18px ;
+    font-weight: normal;
+    line-height: 20px;
+    margin: 0;
+    padding: 0 0 3px;
+  }
+
+  .experiance p1 {
+    color: #000000;
+    font-size: 14px !important;
+    line-height: 18px !important;
+    margin: 0;
+    padding: 0 0 10px !important;
+  }
+  .experiance p {
+    
+    font-size: 14px !important;
+    
+  }
+  .achievement1 p1 {
+    color: #000000;
+    font-size: 14px !important;
+    line-height: 18px !important;
+    margin: 0;
+    padding: 0 0 10px !important;
+  }
+  .achievement1 p2{
+  font-size: 14px ;
+  }
+
+  .education h3 {
+    color: #0088CC;
+    font-family: 'OpenSansSemibold';
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 18px;
+    margin: 0;
+    padding: 0 0 5px;
+  }
+  .education p1 {
+    color: #000000;
+    font-size: 14px !important;
+    line-height: 18px !important;
+    margin: 0;
+    padding: 0 0 10px !important;
+  }
+  .education p2{
+  font-size: 14px ;
+  }
+
+  .achievementsTop {
+    color: #000000;
+    font-family: 'OpenSansRegular';
+    font-size: 14px;
+    line-height: 18px;
+    overflow: hidden;
+  }
+

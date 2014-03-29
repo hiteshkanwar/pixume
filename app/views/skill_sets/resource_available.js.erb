@@ -1,0 +1,4 @@
+<% if !@resources.blank? %>
+$(".replace_with_resource").html("<%= j render(:partial => 'available_resource') %>")
+$(".pixsume_skill_set").html("<%= j render(:partial => 'available_resource') %>")
+<%end%>

@@ -1,0 +1,22 @@
+= form_for @usage_tracking do |f|
+  - if @usage_tracking.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@usage_tracking.errors.count, "error")} prohibited this usage_tracking from being saved:"
+      %ul
+        - @usage_tracking.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :session_id
+    = f.text_field :session_id
+  .field
+    = f.label :user_name
+    = f.text_field :user_name
+  .field
+    = f.label :user_email
+    = f.text_field :user_email
+  .field
+    = f.label :last_access_url
+    = f.text_field :last_access_url
+  .actions
+    = f.submit 'Save'

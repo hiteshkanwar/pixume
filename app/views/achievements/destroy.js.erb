@@ -1,0 +1,6 @@
+<% if @achievement.errors.blank? %>
+  $("#achievements_list").html("<%= j render('achievements/list', :achievements => @user.achievements) %>")
+	$("#achievement_msg").html("<%= j flash_ajax_msg('success', 'Achievement deleted successfully') %>")
+<% else %>
+	$("#achievement_msg").html("<%= j errors_for(@achievement) %>")
+<% end %>

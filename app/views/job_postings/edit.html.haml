@@ -1,0 +1,10 @@
+- model_class = JobPosting
+%section#body.inner
+  %section.container
+    .hero-unit.infoBox.final
+      .topInfo{:style => "border: none; margin-bottom: none;"}
+      .careerSnap
+        %h2
+          %span
+            = "Edit Job Post"
+        = render :partial => "form"

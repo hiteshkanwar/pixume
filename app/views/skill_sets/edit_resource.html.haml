@@ -1,0 +1,62 @@
+= metamagic :title => "Pixsume Visual Resume | Resource"
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+
+%section#body.inner
+  %section.container
+    .hero-unit.infoBox.final
+      = flashes
+      .topInfo{:style => "border: none; margin-bottom: none;"}
+      .careerSnap
+        %h2
+          - skill_set_name = SkillSet.find(params[:id].to_i).name
+          %span
+            Update (#{skill_set_name})
+      / = form_tag "/skill_sets/resource_create", :multipart => true do
+      %div{:style=>"width:100%;"}
+        
+        
+        / =form_for(Resource.new,:url => { :controller => "skill_sets", :action => :resource_create }, :html => { :method => :post,:multipart => true }) do |f| 
+        =form_for(@resource,:url => update_resource_skill_sets_path(:id=>params[:resource_id]), :html => { :method => :post,:multipart => true }) do |f|
+         
+        
+          %div{:style=>"width:50%; float:left;"}
+            .control-group
+              = label_tag 'skill_set_name',nil, :class => 'control-label', :required => true
+              .controls
+                
+                
+                = f.text_field :name,:value => "#{skill_set_name}",:class => 'span2 ahead', :required => true, :maximum => 50, readonly: "true" 
+            .control-group
+              = label_tag 'resource_name',nil, :class => 'control-label', :required => true
+              .controls
+                = f.text_field:resource_name,:class => 'span2 ahead', :required => true, :maximum => 50       
+            .control-group
+              = label_tag 'Resource Description',nil, :class => 'control-label'
+              .controls
+                = f.text_area :description,:class => 'text_area', :required => true, :style => "min-height: 80px; width: 450px; height: 120px;"
+          %div{:style=>"width:50%; float:right;"}      
+            .control-group
+              = label_tag 'Resource Type',nil, :class => 'control-label'
+              .controls
+                = f.select :paid,options_for_select([["Free", "Free"],["Paid","Paid"]]) ,:class => 'span2 ahead', :required => true 
+            .control-group
+              = label_tag 'Resource Logo',nil,:class=>'control-group'
+              .controls
+                = f.file_field :logo       
+            
+            .control-group
+              = label_tag 'Resource URL',nil, :class => 'control-label', :required => true
+              .controls
+                = f.text_field :link,:class => 'span2 ahead', :required => true, :maximum => 50    
+            
+          = hidden_field_tag "skill_set" ,params[:id]
+          - @url= request.referrer
+          = hidden_field_tag "url" ,@url
+
+          .form-actions
+            = f.submit 'Update Resource', :class => 'btn btn-primary',:style=>"margin-top: 35px;"
+

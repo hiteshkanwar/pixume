@@ -1,0 +1,15 @@
+<% if resource.errors.blank? %>
+  $.colorbox({
+    html: "<div class='hero-unit'><div class='alert alert-success'><b>We've sent password reset instructions to your email address.</b><br/>If you don't receive instructions within a few minutes, check your email's spam and junk filters.</div></div>",
+    onLoad: function() {
+      $('#cboxClose').hide();
+    }
+  });
+	
+  setTimeout(function() {
+    $.colorbox.close();
+    $('#cboxClose').show();
+  }, 5000);
+<% else %>
+  $("#password_errors").html("<%= j errors_for(resource) %>")
+<% end %>

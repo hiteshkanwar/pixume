@@ -1,0 +1,8 @@
+<% if @achievement.errors.blank? %>
+  if($("#achievements_list").length > 0){
+    $("#achievements_list").html("<%= j render('achievements/list', :achievements => @user.achievements) %>")
+  }
+  $.colorbox.close()
+<% else %>
+  $("#achievement_errors").html("<div class='alert'><%= j errors_for(@achievement)  %></div>")
+<% end %>

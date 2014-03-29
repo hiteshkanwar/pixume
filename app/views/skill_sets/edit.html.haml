@@ -1,0 +1,7 @@
+#popup4.popupBox{:style => "z-index: 9999;"}
+  %h2
+    %span Edit Skill Set
+  .hero-unit
+    #skill_set_errors{:style => "color: #ff0000"}
+    = form_for @skill_set, :remote => true do |f|
+      = render 'skill_sets/form_fields', :f => f

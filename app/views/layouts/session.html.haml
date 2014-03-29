@@ -1,0 +1,16 @@
+!!!
+%html
+  %head
+    %title Pixsume
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    .navbar
+      %section.container
+        .navInner
+          %a{:href => "#"}
+            %img.logo{:alt => "", :src => "/assets/logo.png"}/
+          = render 'layouts/header_menu'
+    = yield
+    = render 'layouts/footer'

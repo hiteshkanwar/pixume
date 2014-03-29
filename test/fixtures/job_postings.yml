@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_id: 1
+  company_id: 1
+  title: MyString
+  description: MyString
+  requirements: MyString
+  salary: MyString
+  min_years_exp: 1
+  max_years_exp: 1
+  location: MyString
+  country: MyString
+  show_matching_profiles: false
+  is_public: false
+
+two:
+  user_id: 1
+  company_id: 1
+  title: MyString
+  description: MyString
+  requirements: MyString
+  salary: MyString
+  min_years_exp: 1
+  max_years_exp: 1
+  location: MyString
+  country: MyString
+  show_matching_profiles: false
+  is_public: false

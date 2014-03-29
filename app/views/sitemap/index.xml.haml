@@ -1,0 +1,20 @@
+
+- base_url = "http://#{request.host_with_port}"
+!!! XML
+%urlset{:xmlns => "http://www.sitemaps.org/schemas/sitemap/0.9"}
+  - @pages_to_visit.each do |page|
+    %url
+      %loc #{base_url}#{page[:url]}
+      - if page[:updated_at].present?
+        %lastmod= page[:updated_at]
+      %changefreq= page[:changefreq].present? ? page[:changefreq] : "monthly"
+      %priority= page[:priority].present? ? page[:priority] : "0.8"
+
+  - @static_urls.each do |static_urls|
+    %url
+      %loc #{base_url}#{static_urls[:url]}
+      - if static_urls[:updated_at].present?
+        %lastmod= static_urls[:updated_at]
+      %changefreq= static_urls[:changefreq].present? ? static_urls[:changefreq] : "monthly"
+      %priority= static_urls[:priority].present? ? static_urls[:priority] : "0.8"
+

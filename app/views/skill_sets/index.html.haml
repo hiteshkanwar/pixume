@@ -1,0 +1,17 @@
+%h1 Listing skill_sets
+
+%table
+  %tr
+    %th
+    %th
+    %th
+
+  - @skill_sets.each do |skill_set|
+    %tr
+      %td= link_to 'Show', skill_set
+      %td= link_to 'Edit', edit_skill_set_path(skill_set)
+      %td= link_to 'Destroy', skill_set, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Skill set', new_skill_set_path

@@ -1,0 +1,21 @@
+%h1 Listing course_ratings
+
+%table
+  %tr
+    %th Name
+    %th Score
+    %th
+    %th
+    %th
+
+  - @course_ratings.each do |course_rating|
+    %tr
+      %td= course_rating.name
+      %td= course_rating.score
+      %td= link_to 'Show', course_rating
+      %td= link_to 'Edit', edit_course_rating_path(course_rating)
+      %td= link_to 'Destroy', course_rating, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Course rating', new_course_rating_path

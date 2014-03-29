@@ -1,0 +1,95 @@
+
+= metamagic :title => "Pixsume Visual Resume | Resource show"
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+%section#body.inner
+  %section.container
+    .hero-unit.infoBox.final
+      = flashes
+      %form{:action => resources_path, :method => "get", :name => "short_user"}
+        %table{:border => "0", :cellpadding => "6", :cellspacing => "4", :width => "100%"}
+          %tr{:width => "100%"}
+            %td{:style=>"float: right;"}
+              
+              Please select for sort
+              = select_tag :sort, options_for_select([["resource name","resource name"],["skill set name","skill set name"],["status","status"]]), :required => true, :class => 'sort',:id=>"resource_sort",:style=>"width: 150px;"
+            %td{:style=>"padding-left: 15px;"}
+              #search{:style=>"width: 78px;"}
+                = form_tag resources_path ,:remote=>true do 
+
+                  = text_field_tag :search, nil,:class => 'search', :required => true,:maximum => 50 ,:placeholder=>"Search Resources..."
+    
+      
+
+                
+      .sort_resource
+        .careerSnap
+          %h2
+            %span
+              = "View Resources"
+        
+
+        %table.table.table-striped
+          %tr
+            %th Logo/Image
+            %th Skill Set Name
+            %th Resource Name  
+            %th Detail
+            %th Status
+
+          - @resources.each do |resource|
+           
+            %tr
+
+              %td= image_tag(resource.logo(:thumb), :alt => "", :class => '')
+              %td= resource.name
+              %td= resource.resource_name
+              %td= link_to "View Detail",resource_detail_skill_set_path(resource,:skillset_id=>resource.skill_set_id),:class=>"btn btn-success "
+              - if resource.approved == true
+                %td= button_to('Active',approved_resource_skill_sets_path(resource), :class => 'btn btn-primary', :method => :get)
+              -else
+                %td= button_to('Pending approval',pending_resource_skill_sets_path(resource), :class => 'btn btn-primary', :method => :get)
+              
+              
+#myModal123.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);"}
+  %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 28px; width: 160px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Update Resource        
+  .modal-body{:style=>"overflow-y:hidden;"}      
+    %b Resource updated successfully.
+    %br/
+    %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right; margin-top: 12px; margin-right: 6px; padding-left: 30px; padding-right: 30px;",:id=>"model_close",:title=>"Request a new resource",:class=>"model_pop_request"} Ok                       
+              
+:javascript
+  $( document ).ready(function() {
+  var flag="#{session[:resource]}"
+      
+      if (flag == "updated")
+      {
+      
+      $('#myModal123').modal("show");
+      "#{session[:resource]='false'}"
+      }
+  });    
+  var str
+  $( ".sort" ).change(function () {
+    
+   str = $( "select option:selected" ).text();
+  $.ajax({
+      url: "#{resources_path}",
+      data: {data: str}
+    });
+    });
+
+    $( "#search" ).keyup(function () {
+    var search_str= $('.search').val()
+     str = $( "select option:selected" ).text();
+        $.ajax({
+        url: "#{resources_path}",
+        data: {search_str: search_str, data:str}
+      });
+   
+  });
+
+

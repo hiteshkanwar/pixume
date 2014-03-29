@@ -1,0 +1,16 @@
+<% if @user.errors.blank? %>
+  $("#basic_info_errors").html('')
+  $.colorbox.close();
+  <% if params[:update_div] == 'basic_info' %>
+    if($("#basic_info").length > 0)
+      $("#basic_info").html("<%= j (render 'users/basic_profile', :user => @user) %>")
+  <% elsif params[:update_div] == 'summary' %>
+    if($("#summary").length > 0)
+      $("#summary").html("<%= j (render 'users/summary', :user => @user) %>")
+  <% elsif params[:update_div] == 'video' %>
+    if($("#video").length > 0)
+      $("#video").html("<%= j (render 'users/video', :user => @user) %>")
+  <% end %>
+<% else %>
+  $("#basic_info_errors").html("<%= j errors_for(@user) %>")
+<% end %>

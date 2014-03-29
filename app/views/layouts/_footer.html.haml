@@ -1,0 +1,77 @@
+.footer
+  .container
+    .row
+      .col-md-3.col-sm-3
+        %h4 About Us
+        %ul
+          %li
+            = link_to "About Pixsume", about_us_url
+          %li
+            %a{:href => "#"} Pixsume
+          %li
+            = link_to "Blog", "http://blog.pixsume.com/", :target => "_blank"
+          %li
+            = link_to "Press Release", press_release_url
+          %li
+            = link_to "Jobs", jobs_url
+      .col-md-3.col-sm-3
+        %h4 Contact Us
+        %ul
+          %li
+            = link_to "Contact Pixsume", contact_us_url
+      .col-md-3.col-sm-3
+        %h4 Follow Us
+        %ul.social
+          %li
+            %a{:href => "https://www.facebook.com/Pixsume"}
+              %span.fb>
+              Facebook
+          %li
+            %a{:href => "https://twitter.com/pixsume"}
+              %span.tw>
+              Twitter
+          %li
+            %a{:href => "#"}
+              %span.ln>
+              Linkedin
+          %li
+            %a{:href => "#"}
+              %span.gp>
+              Google+
+      .col-md-3.col-sm-3
+        %h4 Legal Info
+        %ul
+          %li
+            = link_to "Terms of Services", terms_of_services_url
+          %li
+            = link_to "Privacy Policy", privacy_policy_url
+
+.copyright
+  .container
+    .row
+      .col-md-12.text-center.copy Copyright © 2014 pixsume     
+
+      / modal
+      
+= stylesheet_link_tag "bootstrap1.css"
+= stylesheet_link_tag "style1.css"
+= stylesheet_link_tag "animate1.css"
+
+<!-- HitTail Code -->
+:javascript
+  (function(){
+    var ht = document.createElement('script');
+    ht.async = true;
+    ht.type='text/javascript';
+    ht.src = '//108475.hittail.com/mlt.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ht, s);
+  })();
+
+  setTimeout(function(){var a=document.createElement("script");
+  var b=document.getElementsByTagName("script")[0];
+  a.src=document.location.protocol+"//dnn506yrbagrg.cloudfront.net/pages/scripts/0021/2808.js?"+Math.floor(new Date().getTime()/3600000);
+  a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1); 
+/ Footer Ends
+
+

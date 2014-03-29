@@ -1,0 +1,126 @@
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+:css
+  #cboxClose{
+    bottom: 17px;
+  }
+%header
+  %section.headerInner
+    %section.container
+      = flashes
+    
+      %p
+        Fast & Free way to create your
+        %strong Visual Resume
+      %img{:alt => "visual resume format", :src => "/assets/Visualresumeformat.png"}
+      #SignUp
+        .hero-unitSignUp{:style=>"margin-left: 400px;"}
+          %strong Create New Account
+          = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :remote => true) do |f|
+            #registration_error
+            = f.text_field :name, :placeholder => "Name", :required => 'true'
+            = f.email_field :email, :placeholder => "Email", :required => 'true', :email => 'true'
+            = f.password_field :password, :placeholder => "Password", :required => 'true'
+            = f.password_field :password_confirmation, :placeholder => "Password Confirmation", :required => 'true'
+            /%label
+            /%input#checkbox{:name => "checkbox", :type => "checkbox"}/
+            /Remember me
+            .btn-group.create
+              = f.submit "Create Account",:style=>"margin-left:80px;", :class => "btn btn-success"
+          %p or     
+          .btn-group.linkedin
+            %button.btn.btn-info{"data-toggle" => "dropdown", :onclick => "authentications_opener('/auth/linkedin'); return false;",:style=>"margin-left: 8px;margin-top: -14px;"}
+              %img{:alt => "Login using LinkedIn", :src => "/assets/linkedin-icon.png"}/
+              Log In Via
+              %strong Linkedin 
+      .btn-group.createSignUp
+        %button.btn.btn-success{:id =>'CreateAcc'} Create New Account
+
+      #SignIn
+        .hero-unit{:style=>"width: 313px; height: 332px; margin-top: -612px; margin-left: 556px;"}
+          %strong Sign In
+          = form_for(resource, :as => resource_name, :url => session_path(resource_name), :remote => true) do |f|
+            #login_error
+            = f.email_field :email, :placeholder => 'Email', :required => true, :class => 'span2', :style => "width:200px;"
+            = f.password_field :password, :placeholder => 'Password', :required => true, :class => 'span2',:style=>"width: 200px;"
+            %label{:style=>"margin-right: 200px;"}
+              = f.check_box :remember_me
+              Remember Me
+            = f.submit "Log In", :class => "btn btn-success"
+            %a.forgot{:href => new_password_path(resource_name), :id => "forgot_link",:style=>"padding-left: 57px;"} Forgot Password?  
+             
+            %p{:style=>"padding-left: 100px;"} or  
+
+          .btn-group.linkedin
+            %button.btn.btn-info{"data-toggle" => "dropdown", :onclick => "authentications_opener('/auth/linkedin'); return false;",:style=>"margin-left: 8px;margin-top: -3px;"}
+              %img{:alt => "Login using LinkedIn", :src => "/assets/linkedin-icon.png"}/
+              Log In Via
+              %strong Linkedin
+/ Header Ends
+/ Body Starts
+%section#body
+  %section.container
+    %h1 4 reasons why you should create Visual resume now!
+    .bodyLeft
+      %ul
+        %li
+          %span 1
+          %h3 Standardized Visual resume format
+          Recruiters generally spend 5-6 seconds screening a resume, Our standardized visual resume format will highlight your key achievements and make your resume stand out from the crowd.
+        %li
+          %span 2
+          %h3 Create Visual resume from LinkedIn profile
+          if you have a LinkedIn Profile, you can create your Visual resume by importing your LinkedIn profile.
+        %li{:style=>"float: left;"}
+          %span 3
+          %h3 Rate and Improve your Skill Sets
+          Create a visual resume, self rate your skill sets, compare your skills with other visual resume profiles and create a roadmap to improve or acquire new skill sets.
+        %li
+          %span 4
+          %h3 Easy to share online resume
+          %ul.step_4{:style=>"margin-left: 102px;"}
+            %li Inbuilt sharing capabilities to make it easy to send your resume to recruiters,friends etc.
+            %li Share it on social networks like LinkedIn, Twitter or Facebook.
+    /.bodyRight
+    /  %img{:alt => "", :src => "/assets/body-right-img.jpg"}/
+    .btn-group
+      %button.btn.btn-success{"data-toggle" => "dropdown"} FREE! Get Started Now
+    %p.botText 100% FREE, FAST and EFFECTIVE
+/ Body Ends
+/ Footer Starts
+:javascript
+  $('#CreateAcc').click(function() {    
+    if($("#SignIn").css('display') == 'block'){
+     $("#CreateAcc").text("Sign in");
+     $('#SignIn').hide();   
+     $('#SignUp').show();}
+     else{
+     $("#CreateAcc").text("Create New Account");
+     $('#SignIn').show();   
+     $('#SignUp').hide();
+    }
+   });
+
+    $(function on_load(){$('#SignUp').hide();});
+:css
+  .hero-unit > strong {
+    color: #1AB9F0;
+    font-size: 20px;
+  }
+  .step_4 {
+    list-style: disc outside none;
+
+  }
+  .hero-unitSignUp > strong {
+    color: #1AB9F0;
+    font-size: 20px;
+  }
+   
+  @-moz-document url-prefix()
+  {
+    .hero-unitSignUp 
+      {margin-bottom: 70px !important}
+  }

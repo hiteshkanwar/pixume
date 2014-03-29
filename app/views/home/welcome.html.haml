@@ -1,0 +1,63 @@
+= metamagic :title => "Pixsume Visual Resume | Welcome"
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+  <!-- Google Code for Sign up Conversion Page -->
+  /* <![CDATA[ */
+  var google_conversion_id = 984374354;
+  var google_conversion_language = "en";
+  var google_conversion_format = "1";
+  var google_conversion_color = "ffffff";
+  var google_conversion_label = "cWz7CI7e-AUQ0rix1QM";
+  var google_conversion_value = 0;
+  var google_remarketing_only = false;
+  /* ]]> */
+.div{:style => "display:none"}
+  = javascript_include_tag "//www.googleadservices.com/pagead/conversion.js"
+%section#body.inner
+  %section.container
+    = flashes
+    
+    %h1= "Welcome #{current_user.first_name}, Lets gets started! Build your resume first."
+    .hero-unit.regBox
+      %h2 Select the option which works best for you
+      .hero-unit.options.linkedin_get_box
+        %a.link{:href => get_profile_from_linkedin_url }
+          .imgCont
+            %img{:alt => "", :src => "/assets/reg-linkedin.png"}/
+          .div{:style => "height:120px;"}
+            %h3 Build your Resume from Linkedin Profile
+            %p Import your profile from Linkedin in 2 simple steps
+          .btn-group{:style => "width:100%; align:center;"}
+            %button.btn.btn-success Create Now!
+      .hero-unit.options
+        %a.link{:href => profile_url }
+          .imgCont
+            %img{:alt => "", :src => "/assets/reg-pc.png"}/
+          .div{:style => "height:120px;"}
+            %h3 Create a Profile Online
+            %p Don't have a Linkedin profile? Create your resume Online using a simple resume builder
+          .btn-group{:style => "width:100%; align:center;"}
+            /= link_to "Create Now!", get_profile_from_linkedin_url, :class => "btn btn-success"
+            %button.btn.btn-success Create Now!
+/ Body Ends
+
+:css
+  #cboxClose {
+    display: none !important;
+    font-size: 14px;
+    bottom: 5px;
+    left: 210px;
+  }
+:javascript
+  $(".linkedin_get_box").click(function(){
+    $.colorbox({
+      html: "<div>&nbsp;&nbsp;&nbsp;<img src='/assets/images/loading.gif'>&nbsp;&nbsp;&nbsp;&nbsp;Please wait while we load your profile from Linkedin.</div>",
+      width: "440px",
+      close: "Ok",
+      onLoad: function() { $('#cboxClose').remove(); }
+    });
+  });
+  

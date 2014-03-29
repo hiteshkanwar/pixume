@@ -1,0 +1,7 @@
+#popup4.popupBox{:style => "z-index: 9999;"}
+  %h2
+    %span Edit Achievement
+  .hero-unit
+    #achievement_errors{:style => "color: #ff0000"}
+    = form_for @achievement, :remote => true do |f|
+      = render 'achievements/form_fields', :f => f

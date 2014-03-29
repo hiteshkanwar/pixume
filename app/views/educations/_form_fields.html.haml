@@ -1,0 +1,43 @@
+:css
+  #cboxClose {
+    font-size: 14px ;
+    bottom: 27px !important;
+  }
+%table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+  %tr
+    %td.labelCont School Name
+    %td
+      /%input.span2{:type => "text"}/
+      = f.text_field :institute, :class => 'span2', :required => true
+  %tr
+    %td.labelCont Degree
+    %td
+      /%input.span2{:type => "text"}/
+      = f.text_field :course, :class => 'span2', :required => true
+  %tr
+    %td.labelCont Time Period
+    %td
+      %label
+        %input{:id => "", :name => "", :type => "checkbox"}/
+        I am currently attending
+  %tr
+    %td.labelCont From Period
+    %td
+      = f.select :from_year, (1970..Date.today.year).to_a.reverse, {:prompt => "Select Year"}, :style => "width:160px"
+  %tr  
+    %td.labelCont To Period
+    %td
+      = f.select :to_year, (1970..Date.today.year).to_a.reverse, {:prompt => "Select Year"}, :style => "width:160px"
+
+  %tr
+    %td.labelCont Location
+    %td
+      = f.text_field :location
+      %br
+      %br
+
+  %tr
+    %td &nbsp;
+    %td
+      = f.submit 'Done', :class => "btn btn-success dropdown-toggle"
+

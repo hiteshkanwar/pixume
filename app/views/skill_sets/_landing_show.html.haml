@@ -1,0 +1,95 @@
+= flashes
+%h1{:style=>"color: #0072B3;"} Want to know how good you are?
+.hero-unit.infoBox
+  .landingdiv
+    %p Pixsume lets you compare your skillsets with similar profiles present in Pixsume Network. What do you get?
+    %p 1. Immediate comparison of your skillsets with others                           
+    %p 2. Recommendation on what skillsets are on par with others and what needs improvement
+    %p 3. Identify Skill set gap: skills which others have but you don't have                                           
+    %p Let’s get started           
+    
+    %a.btn{"data-toggle" => "modal", href: "#myModal", role: "button", :class => "btn btn-success" } Compare with Pixsume Network
+    %span 
+      %b Or
+    %a.btn{"data-toggle" => "modal", href: "#myModal1", role: "button", :class => "btn btn-info"} Compare with an Individual
+
+    / Button to trigger modal
+
+    / Modal
+    #myModal.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"border-width: 3px; height: 253px; border-color: rgb(26, 185, 240);"}
+
+      %h4{:style=>"margin-top: 0px; margin-right: 22em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}
+        %span{:style=>"font-weight: normal;"} COMPARE WITH PIXSUME NETWORK
+      .modal-body
+        %p Based on your profile , we have following suggestions for your skillsets match :
+        
+        
+        - if  @missing_suggestion.blank? && @search_suggestion.blank?
+          %b "Sorry No suggestions , Please Suggest your own title"
+        -else
+          - if !@exp_desig.blank?
+            %P{:style=>"color: #0088CC;"}=  @exp_desig.last
+            %a{:href => "#", :class => "btn btn-success",:id=>"last"}Compare
+
+        %br/
+        %br/ 
+        = "Or"
+        %a{href: "#", onclick: "$('.suggest_own').show();"} Suggest your own
+        %br/ 
+        %br/ 
+        .suggest_own{:style=>"display: none"}
+          Enter the title you want to compare with : 
+          %br/
+          = form_tag skillsetmap_skill_sets_path do 
+            = text_field_tag :designation ,nil, :class => 'span2 ahead', :required => true, :maximum => 50
+            .actions
+              = submit_tag 'Compare' ,:class=>"btn btn-success",:id=>"search_title_name",:style=>"margin-top: -7px;"
+            .searchcategory 
+
+      
+      %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"margin-left: 416px; margin-bottom: 11px;"} Cancel
+#myModal8.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 170px; border-width: 3px; border-color: rgb(26, 185, 240);"}
+  %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Request a new resource
+  .modal-body
+    %b Thanks for submitting your request, we will inform you when the requested resources are available.
+    %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right; margin-top: 30px; margin-right: 6px; padding-left: 30px; padding-right: 30px;",:id=>"model_close",:title=>"Request a new resource"} Ok  
+#myModal9.modal.fade{"aria-hidden" => "true", role: "dialog", :style=>"height: 170px; border-width: 3px; border-color: rgb(26, 185, 240);"}
+  %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Suggest a new resource
+  .modal-body
+    %b Thanks for submitting this resource, our team will review it and get back to you.
+
+    %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right; margin-top: 30px; margin-right: 6px; padding-left: 30px; padding-right: 30px;",:id=>"model_close",:title=>"Request a new resource"} Ok       
+
+
+:javascript
+  $(".ahead").keyup(function(){
+   var value=$(this).val();
+
+     $.ajax({
+      url: "#{experience_search_skill_sets_path}",
+      data: {data: value}
+    })
+  })
+
+  $(document).ready(function(){
+    if (#{session[:requestor]=="requestor"}){ 
+       var a=' #{session[:requestor]=nil}'
+      $('#myModal8').modal("show");  
+      $(".modal-body").focus();
+       
+    } 
+     if (#{session[:resource]=="resource"}){ 
+       var a=' #{session[:resource]=nil}'
+      $('#myModal9').modal("show");  
+      $(".modal-body").focus();
+       
+    } 
+  })
+
+:css
+  .landingdiv
+   p {
+    font-size: 15px !important;
+    }
+
+

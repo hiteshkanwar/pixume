@@ -1,0 +1,21 @@
+development:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: pixsume_development
+  pool: 5
+  username: root
+  password:
+  socket: /opt/lampp/var/mysql/mysql.sock
+  host: 127.0.0.1
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: pixsume_production
+  pool: 5
+  username: root
+  password:
+  socket: /opt/lampp/var/mysql/mysql.sock
+  host: 127.0.0.1

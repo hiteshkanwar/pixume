@@ -1,0 +1,198 @@
+:javascript
+  var switchTo5x=false;
+%script{:src => "http://w.sharethis.com/button/buttons.js", :type => "text/javascript"}
+:javascript
+  stLight.options({publisher: "ur-35e1275a-7e3-4b45-4986-f97abe2355f6"});
+:javascript
+  $(function() {
+    $('.achievement a').tooltip({
+            showURL: false,
+    });
+  });
+
+  $(function() {
+    $('.timeBar a').tooltip({
+            showURL: false,
+    });
+  });
+
+%section#body.inner
+  %section.container
+    %h1{:style => "float:left;"} 
+      = @user.name
+      = "- #{@user.position}" unless @user.position.blank?
+    .buttonCont
+      .btn-group
+        %button.btn.btn-success.dropdown-toggle{"data-toggle" => "dropdown"}
+          Export Resume
+          %span.caret
+        %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu", :role => "menu"}
+          %li
+            %a{:href => "#", :tabindex => "-1"} Export to Word
+          %li
+            %a{:href => "#", :tabindex => "-1"} Export to PDF
+      %a.edit{:href => profile_url} Edit
+      .addthis
+        %span.st_sharethis_large{:displaytext => "ShareThis"}
+        %span.st_facebook_large{:displaytext => "Facebook"}
+        %span.st_twitter_large{:displaytext => "Tweet"}
+        %span.st_linkedin_large{:displaytext => "LinkedIn"}
+        %span.st_pinterest_large{:displaytext => "Pinterest"}
+        %span.st_email_large{:displaytext => "Email"}
+    .hero-unit.infoBox.final
+      .topInfo
+        %img.profImg{:alt => "", :src => "/assets/paperclip/profile_image_missing_thumb.jpg"}/
+        .description
+          %p
+            %span.mail
+              = @user.email
+            %span.phone
+              = @user.phone.blank? ? "N. A." : @user.phone
+          - unless @user.summary.blank?
+            %p.main 
+              = @user.summary
+        .rating
+          %h3 Resume Rating
+          %p Social Rating : 7/10
+          .rateCont
+            .box.active
+            .box.active
+            .box.active
+            .box.active
+            .box.active
+            .box.active
+            .box.active
+            .box
+            .box
+            .box
+          %p Comparision Rating : 3/10
+          .rateCont
+            .box.active
+            .box.active
+            .box.active
+            .box
+            .box
+            .box
+            .box
+            .box
+            .box
+            .box
+      .careerSnap
+        %h2
+          %span My Career Snapshot
+        .snapCont
+          .infoTop{:style => "left:120px;"}
+            %h3 RJ Softwares
+            %p Sr Web Designer
+          .infoTop{:style => "left:400px;"}
+            %h3 ConvexDigital
+            %p CoFounder, CEO
+          .infoBot{:style => "left:250px;"}
+            %h3 Net4 India
+            %p Graphic Architect
+          .timeBar
+            .first{:style => "width:100px;"}
+              %a{:href => "#", :title => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet odio lectus, ac laoreet risus. Ut eu dui arcu. Proin enim felis, pellentesque eget bibendum non, tempor blandit arcu. Nulla facilisi."}
+            .second{:style => "width:50px;"}
+              %a{:href => "#", :title => "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."}
+            .third{:style => "width:120px;"}
+              %a{:href => "#", :title => "Cras bibendum ultrices nisi, non accumsan ipsum iaculis in. Nulla nec ipsum lorem, nec pharetra magna. Donec ultrices quam et risus facilisis ac fringilla risus cursus."}
+            .fourth{:style => "width:150px;"}
+              %a{:href => "#", :title => "Vestibulum dui lorem, tincidunt nec aliquet a, bibendum lobortis justo. Nulla id metus ligula. Donec mattis dui molestie augue porttitor hendrerit."}
+            .fifth{:style => "width:50px;"}
+              %a{:href => "#", :title => "Aenean laoreet ultricies laoreet. Suspendisse rhoncus eros ac ante luctus porttitor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere "}
+            .sixth{:style => "width:100px;"}
+              %a{:href => "#", :title => "Nullam commodo laoreet velit, et pellentesque elit vehicula non. Phasellus ultricies nulla sed erat commodo hendrerit facilisis risus porttitor. Aliquam erat volutpat. Suspendisse potenti."}
+            .seventh{:style => "width:130px;"}
+              %a{:href => "#", :title => "Suspendisse neque nisl, pharetra sed congue sit amet, tincidunt et dolor. Aenean erat neque, posuere sit amet suscipit eu, rutrum vitae ipsum."}
+            .eighth{:style => "width:50px;"}
+              %a{:href => "#", :title => "Aliquam eu tortor elit, consectetur convallis elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nullam vel velit quis ligula aliquet blandit. Etiam cursus eros non neque pretium fermentum."}
+            .nineth{:style => "width:50px;"}
+              %a{:href => "#", :title => "Nam diam quam, mollis eu imperdiet quis, cursus sit amet metus. Phasellus id sem urna. Vivamus sed tortor ante, eu ornare augue. Suspendisse vitae sem id ante sollicitudin mollis. Sed tellus enim, eleifend in eleifend eu, viverra ac tortor. Suspendisse potenti. Sed nec odio nisl."}
+            .tenth{:style => "width:50px;"}
+              %a{:href => "#", :title => "Aliquam leo dui, pellentesque quis commodo sed, suscipit at lacus. Quisque porta tincidunt mauris id semper. Aliquam sed hendrerit orci."}
+          .timeline
+            %ul
+              %li 2000
+              %li 2001
+              %li 2002
+              %li 2003
+              %li 2004
+              %li 2005
+              %li 2006
+              %li 2007
+              %li 2008
+              %li 2009
+              %li 2010
+              %li 2011
+              %li 2012
+            %p December 2000
+      .achievement
+        %h2
+          %span My Achievements
+        %p
+          %a{:href => "#", :title => "Achieved 24 % Revenue Growth in 2  years."}
+            %img{:alt => "", :src => "/assets/achievement-icon1.png"}/
+            %span 24%
+            Revenue Growth
+        %p.alt
+          %a{:href => "#", :title => "Increased ROI 350% in 5 months"}
+            %img{:alt => "", :src => "/assets/achievement-icon2.png"}>/
+            Increased ROI
+            %span 350%
+            in 5 months
+        %p
+          %a{:href => "#", :title => "Increased visitor 450%"}
+            %img{:alt => "", :src => "/assets/achievement-icon3.png"}>/
+            Increased visitor
+            %span 450%
+      .skills
+        %h2
+          %span My Skill Sets
+        .skillCont
+          %ul
+            %li Basic
+            %li Intermediate
+            %li Expert
+            %li Advanced
+          .skill.first
+            %div{:style => "width:100px;"}
+            %p UX Design
+          .skill.second
+            %div{:style => "width:150px;"}
+            %p Web Design
+          .skill.third
+            %div{:style => "width:80px;"}
+            %p Prototype Design
+          .skill.fourth
+            %div{:style => "width:250px;"}
+            %p Information Architect
+          .skill.fifth
+            %div{:style => "width:120px;"}
+            %p Wireframe Design
+          .skill.sixth
+            %div{:style => "width:130px;"}
+            %p UX Design
+          .skill.seventh
+            %div{:style => "width:100px;"}
+            %p Web Design
+          .skill.eighth
+            %div{:style => "width:50px;"}
+            %p Prototype Design
+          .skill.nineth
+            %div{:style => "width:110px;"}
+            %p Information Architect
+          .skill.tenth
+            %div{:style => "width:100px;"}
+            %p Wireframe Design
+      .video
+        %h2
+          %span My Video
+        .video
+          - unless @user.video_url.blank?
+            - video_url = @user.video_url
+            - if video_url =~ /youtube/
+              - video_id = video_url.match(/(youtu\.be\/|youtube\.com\/((watch|ytscreeningroom)\?(.*&)?v=|(embed|v|.*\/?)\/))([^\?&"'>]+)/)[6]
+              %iframe{ :width => "292",  :height => "164", :src => "http://www.youtube.com/embed/#{video_id}", :frameborder => "0", :allowfullscreen => true}
+            - else
+              %video{ :width => "292",  :height => "164", :src => "#{video_url}", :controls => "controls", :autobuffer => "autobuffer", :tabindex => "0"}

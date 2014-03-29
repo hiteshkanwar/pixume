@@ -1,0 +1,141 @@
+:css
+  #body.inner .infoBox h2 {
+    text-transform: none;
+  }
+  .control-group .controls p, .control-group .controls span {
+    font-size: 12px;
+    line-height: 14px;
+    padding: 5px 0 0;
+    margin: 0;
+  }
+-if !current_user.company.nil?  
+  - company = Company.find(current_user.company_id)
+= form_for @job_posting, :html => { :class => 'form-horizontal', :onsubmit => 'buildTags($("#skillsets").tagit("tags")); return true;' } do |f|
+  - if @job_posting.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@job_posting.errors.count, "error")} prohibited this job posting from being saved:"
+      %ul
+        - @job_posting.errors.full_messages.each do |msg|
+          %li= msg
+  .control-group
+    = f.label 'Job Title', :class => 'control-label', :required => true
+    .controls
+      = f.text_field :title, :class => 'text_field'
+  .control-group
+    = f.label 'Job Description', :class => 'control-label'
+    .controls
+      = f.text_area :description, :class => 'text_area', :required => true, :style => "min-height:80px; height: 100px; width:500px;"
+  .control-group
+    = f.label 'Key Requirements', :class => 'control-label'
+    .controls
+      = f.text_area :requirements, :class => 'text_area', :required => true, :style => "min-height:80px; height:100px; width:500px;"
+  .control-group
+    = f.label 'Key Skillsets', :class => 'control-label'
+    .controls
+      %ul#skillsets{:style => "margin: 0px; height: 100px; width: 500px;"}
+        - if @job_posting.id.blank? == false
+          - skillsets = JobPostingSkillSet.where(:job_posting_id => @job_posting.id)
+          - if skillsets.blank? == false
+            - skillsets.each_with_index do |skillset, index|
+              %li{:"data-value" => skillset.name}= skillset.name
+      %input{:type => "hidden", :name => "keyskillsets", :id => "keyskillsets", :value => ""}
+      %p Press enter or tab to add a skillset
+  .control-group
+    = f.label :salary, :class => 'control-label'
+    .controls
+      = f.text_field :salary, :class => 'text_field'
+  .control-group
+    = f.label 'Years of Experience', :class => 'control-label'
+    .controls
+      = f.number_field :min_years_exp, :class => 'number_field', :min => 0, :max => 50, :step => 1, :style => "width: 50px;"
+      %span= '  (Min) to  '
+      = f.number_field :max_years_exp, :class => 'number_field', :min => 0, :max => 50, :step => 1, :style => "width: 50px;"
+      %span= '  (Max)'
+  .control-group
+    = f.label :location, :class => 'control-label'
+    .controls
+      -if !current_user.company.nil?  
+        = f.text_field :location, :class => 'text_field', :value => company.company_location
+      -else
+        = f.text_field :location, :class => 'text_field'
+  .control-group
+    = f.label :country, :class => 'control-label'
+    .controls
+      -if !current_user.company.nil?    
+        = f.text_field :country, :class => 'text_field', :value => company.company_country
+      -else
+        = f.text_field :location, :class => 'text_field'
+  .control-group
+    = f.label 'Show me matching profiles from Pixsume database', :class => 'control-label'
+    .controls
+      = f.check_box :show_matching_profiles, :class => 'check_box'
+      = f.hidden_field :is_public, :class => 'hidden_field', :value => 1
+  .form-actions
+    = f.submit 'Post Job now', :class => 'btn btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), job_postings_path, :class => 'btn'
+:javascript
+  $('#skillsets').tagit({triggerKeys:['enter', 'comma', 'tab'], maxLength:50, maxTags:10});
+  function buildTags(tags) {
+    var string = "";
+    for (var i in tags)
+      string += tags[i].value + ",";
+    $('#keyskillsets').val(string);
+  }
+  (function ($) {
+    $.fn.autoGrowInput = function (o) {
+
+      o = $.extend({
+        maxWidth: 1000,
+        minWidth: 0,
+        comfortZone: 70
+      }, o);
+
+      this.filter('input:text').each(function () {
+        var minWidth = o.minWidth || $(this).width(),
+          val = '',
+          input = $(this),
+          testSubject = $('<tester/>').css({
+            position: 'absolute',
+            top: -9999,
+            left: -9999,
+            width: 'auto',
+            fontSize: input.css('fontSize'),
+            fontFamily: input.css('fontFamily'),
+            fontWeight: input.css('fontWeight'),
+            letterSpacing: input.css('letterSpacing'),
+            whiteSpace: 'nowrap'
+          }),
+          check = function () {
+            if (val === (val = input.val())) {
+              return;
+            }
+
+            // Enter new content into testSubject
+            var escaped = val.replace(/&/g, '&amp;').replace(/\s/g, ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            testSubject.html(escaped);
+
+            // Calculate new width + whether to change
+            var testerWidth = testSubject.width(),
+              newWidth = (testerWidth + o.comfortZone) >= minWidth ? testerWidth + o.comfortZone : minWidth,
+              currentWidth = input.width(),
+              isValidWidthChange = (newWidth < currentWidth && newWidth >= minWidth) || (newWidth > minWidth && newWidth < o.maxWidth);
+
+            // Animate width
+            if (isValidWidthChange) {
+              input.width(newWidth);
+            }
+          };
+
+        testSubject.insertAfter(input);
+        $(this).bind('keyup keydown blur update', check);
+
+      });
+      return this;
+    };
+  })(jQuery);
+
+  $('input#job_posting_title').autoGrowInput({
+    comfortZone: 25,
+    minWidth: 200,
+    maxWidth: 600
+  });

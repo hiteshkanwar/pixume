@@ -1,0 +1,8 @@
+<% if @skill_set.errors.blank? %>
+  if($("#skill_sets_list").length > 0){
+    $("#skill_sets_list").html("<%= j render('skill_sets/list', :skill_sets => @user.skill_sets) %>")
+  }
+  $.colorbox.close()
+<% else %>
+  $("#skill_set_errors").html("<div class='alert'><%= j errors_for(@skill_set)  %></div>")
+<% end %>

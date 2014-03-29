@@ -1,0 +1,67 @@
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+
+%header
+  %section.headerInner
+    %section.container
+      %img{:alt => "", :src => "/assets/visual-resume.png"}
+      /%h1
+      /  Create Your
+      /  %img{:alt => "", :src => "/assets/resume-text.png"}
+      /  %span{:style => "text-decoration: line-through; color:#56c8ed;"}
+      /    %span{:style => "color: #707070;"} Resume
+      /  %span Visual Resume
+      /  in Seconds
+      %p
+        Most easiest way to create and share
+        %strong Visual Resumes
+      .hero-unit
+        %h2 It’s free, it’s fast. Join Pixsume now!
+        %form{:action => "", :method => "post", :name => "form1"}
+          %input.span2{:onblur => "if(this.value=='')this.value='Name'", :onfocus => "if(this.value=='Name')this.value=''", :type => "text", :value => "Name"}/
+          %input.span2{:onblur => "if(this.value=='')this.value='Email'", :onfocus => "if(this.value=='Email')this.value=''", :type => "email", :value => "Email"}/
+          %input#password-clear1{:type => "text", :value => "Password"}/
+          %input#password-password1.span2{:type => "password"}/
+          %label
+            %input#checkbox{:name => "checkbox", :type => "checkbox"}/
+            Show Password
+          .btn-group.create
+            %button.btn.btn-success{"data-toggle" => "dropdown"} Create Account
+        .btn-group.linkedin
+          %button.btn.btn-info{"data-toggle" => "dropdown"}
+            %img{:alt => "", :src => "/assets/linkedin-icon.png"}/
+            Log In Via
+            %strong Linkedin
+/ Header Ends
+/ Body Starts
+%section#body
+  %section.container
+    %h1 Top 4 reasons why you should join Pixsume now!
+    .bodyLeft
+      %ul
+        %li
+          %span 1
+          %h3 Visual Resume
+          Recruiters generally spend 5-6 seconds screening a resume, making your resume visual will highlight your key achievements and make you stand out from the crowd.
+        %li
+          %span 2
+          %h3 Improve your resume
+          With Pixsume Visual resumes it is easy to get feedback from friends, colleagues and professionals. Create, Get Feedback, Improvise your visual resume it’s that easy!
+        %li
+          %span 3
+          %h3 Videos
+          Make your visual resume even more visual by uploading your professional videos and create your professional brand.
+        %li
+          %span 4
+          %h3 It’s Free!
+          Pixsume is absolutely free; make your visual resume now at no cost.
+    /.bodyRight
+    /  %img{:alt => "", :src => "/assets/body-right-img.jpg"}/
+    .btn-group
+      %button.btn.btn-success{"data-toggle" => "dropdown"} FREE! Get Started Now
+    %p.botText 100% FREE, FAST and EFFECTIVE
+/ Body Ends
+/ Footer Starts

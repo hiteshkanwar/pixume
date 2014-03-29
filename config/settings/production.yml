@@ -1,0 +1,9 @@
+mail_settings:
+  email: 'contact@nirmalcs.com'
+  password: '[tsbom1!'
+  host_url: 'pixsume.com'
+  
+social_apps: 
+  linkedin:
+    consumer_key: 'sg1vbkahtj8p' #bvjc0cni3fcd
+    consumer_secret: 'neOqgKzvF9pZyzlI' #TcJGyNWO4qP79RsT

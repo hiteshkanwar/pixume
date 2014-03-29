@@ -1,0 +1,36 @@
+<table style="margin:auto;" >
+<tr>
+
+<td style="max-width:602px;padding:12px;background:#f7f6f1;" >
+
+
+
+<table border="0" align="center" cellspacing="0" cellpadding="0" style="width:100%;max-width:330px;background:#fff;margin-bottom:20px;border:1px solid #d6d5d0">
+<tbody><tr>
+<td bgcolor="black", align="center" >
+
+
+
+<a target="_blank" style="display:block;margin:0 auto;padding:15px 0" href="">
+<img width="115" height="42" style=" auto;color:#fff;font-size:22px;font-weight:bold" alt="" src="http://www.pixsume.com/assets/logo.png">
+</a>
+</td>
+</tr>
+<tr>
+<td valign="top" style="background:#fff;max-width:600px;padding-bottom:10px">
+<p style="display:block;padding:15px 10%;margin:0;text-align:center;color:#5f5f5f;line-height:21px;font-size:15px">
+Click the button below to verify your account.
+
+<% @c=confirmation_url(@resource, :confirmation_token => @resource.confirmation_token)%>
+<%@new_link=@c.gsub("http://pixsume.com","107.170.114.144")%>
+<p><%= link_to 'Confirm your account',@new_link, :target => '_blank', :style => "display:block;width:auto;min-height:12px;line-height:12px;padding:14px 0;text-align:center;text-decoration:none;font-size:14px;border:1px solid #419e28;color:#fff;border-radius:6px;background-color:#79b516;background-image:linear-gradient(bottom,rgb(111,170,0) 0%,rgb(136,197,57) 100%);background-image:-o-linear-gradient(bottom,rgb(111,170,0) 0%,rgb(136,197,57) 100%);background-image:-moz-linear-gradient(bottom,rgb(111,170,0) 0%,rgb(136,197,57) 100%);background-image:-webkit-linear-gradient(bottom,rgb(111,170,0) 0%,rgb(136,197,57) 100%);background-image:-ms-linear-gradient(bottom,rgb(111,170,0) 0%,rgb(136,197,57) 100%);max-width:250px;margin:0 auto;margin-top:25px" %></p>
+
+</a>
+
+</p>
+</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</table>

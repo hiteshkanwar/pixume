@@ -1,0 +1,28 @@
+%section#body.inner
+  %section.container
+    .hero-unit.infoBox.final         
+      .sort_resource
+        %h3 Number of resources requested against a particular skill sets.
+        -@counts=[]
+        -sort_me = []
+        %br 
+        %table.table.table-striped
+          %tr
+          
+            %td 
+              %b Skill Set Name
+            
+            %td
+            %td
+              %b No of Requests
+    
+            -@sorted.reverse.each do |value|     
+              %tr    
+                %td= value["skill"]
+                %td
+                %td
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  = value["count"]
+              
+                  
+              

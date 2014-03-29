@@ -1,0 +1,25 @@
+%h1 Listing usage_trackings
+
+%table
+  %tr
+    %th Session
+    %th User name
+    %th User email
+    %th Last access url
+    %th
+    %th
+    %th
+
+  - @usage_trackings.each do |usage_tracking|
+    %tr
+      %td= usage_tracking.session_id
+      %td= usage_tracking.user_name
+      %td= usage_tracking.user_email
+      %td= usage_tracking.last_access_url
+      %td= link_to 'Show', usage_tracking
+      %td= link_to 'Edit', edit_usage_tracking_path(usage_tracking)
+      %td= link_to 'Destroy', usage_tracking, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Usage tracking', new_usage_tracking_path

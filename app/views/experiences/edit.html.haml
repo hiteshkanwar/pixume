@@ -1,0 +1,7 @@
+#popup4.popupBox{:style => "z-index: 9999;"}
+  %h2
+    %span Edit Experience
+  .hero-unit
+    #experience_errors{:style => "color: #ff0000"}
+    = form_for @experience, :remote => true do |f|
+      = render 'experiences/form_fields', :f => f

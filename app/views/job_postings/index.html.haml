@@ -1,0 +1,105 @@
+- model_class = JobPosting
+- model_class = JobApplication
+= metamagic :title => "Pixsume Visual Resume | Jobs"
+:css
+  #body.inner .infoBox h2 {
+    text-transform: none;
+  }
+  .topInfo {
+    border: none;
+    margin-bottom: 0px;
+  }
+
+  .topInfo .labelCont{
+    font-size: 14px;
+  }
+  .topInfo input[type="text"] {
+    width: 90%;
+    height: 30px;
+    margin-bottom: 0px;
+  }
+  table th {
+    font-weight: bold;
+  }
+  table td {
+    vertical-align: middle;
+  }
+  .careerSnap h4 {
+    color: #0088CC;
+    margin-top: 2px;
+  }
+  .careerSnap table td {
+    vertical-align: top;
+  }
+  .careerSnap table td p {
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 18px;
+  }
+  .careerSnap span.detail {
+    font-size: 13px;
+    line-height: 18px;
+    color: #707070;
+    word-wrap: break-word;
+    white-space: -moz-pre-wrap;
+    white-space: pre-line;
+  }
+%section#body.inner
+  %section.container
+    .hero-unit.infoBox.final
+      .topInfo{:style => "border: none; margin-bottom: none;"}
+      .careerSnap
+        %h2
+          %span
+            =t '.title', :default => model_class.model_name.human.pluralize.titleize
+        - unless current_user.job_postings.blank?
+          - job_postings = current_user.job_postings
+          /- job_postings = @job_postings
+          %span{:style => "font-weight: bold;"}
+            = "There are #{job_postings.length} job(s) posted by you."
+          -if current_user.role !="default"
+            = link_to "Post a New Job", new_job_posting_path, :class => 'btn btn-primary'
+          %div{:style => "height: 15px;"}
+          %table.table.table-striped
+            %thead
+              %tr
+                %th{:width => '55%'}= 'Jobs'
+                %th{:width => '20%'}= ''
+                -if current_user.role !="default"              
+                  %th{:width => '25%'}= 'Actions'
+            %tbody
+            - job_postings.each do |job_posting|
+              %tr
+                %td
+                  %h4= link_to job_posting.title, job_posting_path(job_posting)
+                  %p
+                    %span.detail= job_posting.description
+                    - skillsets = JobPostingSkillSet.where(:job_posting_id => job_posting.id)
+                    - unless skillsets.blank?
+                      %br
+                      %br
+                      %span{:style => "font-weight: bold; color: #0088CC;"}= "Key Skills: "
+                      - skillsets.each_with_index do |skillset, index|
+                        - if index != 0
+                          = ", "
+                        = skillset.name
+                %td
+                  %p
+                    - pplApplied = JobApplication.where(:job_posting_id => job_posting.id)
+                    /- pplApplied = "10"
+                    %span{:style => "font-weight: bold; color: #0088CC;"}= "#{pplApplied.length} "
+                    = 'People Applied for this Job'
+                    %br
+                    %span{:style => "font-weight: bold; color: #0088CC;"}= "0 "
+                    = 'Suggested Profiles'
+                %td
+                  -if current_user.role !="default"
+                    = link_to 'Edit', edit_job_posting_path(job_posting), :class => 'btn'
+                    = link_to 'Show Profiles', show_profile_path(:job_posting_id =>job_posting.id), :class => 'btn btn-success'
+                  /= link_to t('.destroy', :default => t("helpers.links.destroy")), job_posting_path(job_posting), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
+        - else
+          -if current_user.role !="default"
+            %span{:style => "font-weight: bold;"}
+              = "You have not posted any jobs."
+            = link_to "Post a New Job", new_job_posting_path, :class => 'btn btn-primary'
+

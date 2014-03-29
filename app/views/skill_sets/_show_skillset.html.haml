@@ -1,0 +1,329 @@
+= flashes
+
+.replace_with_resource
+  %h5{:style=>"color: #0072B3;margin-right: 626px;"}Skillset match results with #{@people_match.count} pixsume profile
+  .hero-unit.infoBox
+    .top_head                
+      %h3 Overall Score            
+      .progress
+        - if !@overall_percent.nil?
+          - if @overall_percent <= 33.33
+            .bar.bar-danger{style: "width: #{@overall_percent}%;"}
+          - elsif @overall_percent > 33.33 &&  @overall_percent < 66.66
+            .bar.bar-danger{style: "width: 33.33%;"}
+            - @remaining_percent = (@overall_percent - 33.33)
+            .bar.bar-warning{style: "width: #{@remaining_percent}%;"}
+          - elsif @overall_percent > 66.66
+            .bar.bar-danger{style: "width: 33.33%;"}
+            .bar.bar-warning{style: "width: 33.33%;"}
+            - @remaining_percent = (@overall_percent - 66.66)
+            .bar.bar-success{style: "width: #{@remaining_percent}%;"}
+      .skillCont
+        %section#options{:class => "clearfix"}
+          %ul{:style=>"margin-top: -22px;"}
+            %li{:style=>"margin-right: 60px;"}
+              %b 0
+            %li{:style=>"margin-right: 89px;"} 
+              %b 1
+            %li{:style=>"margin-right: 89px;"} 
+              %b 2
+            %li{:style=>"margin-right: 89px;"} 
+              %b 3
+            %li{:style=>"margin-right: 89px;"} 
+              %b 4
+            %li{:style=>"margin-right: 89px;"} 
+              %b 5
+            %li{:style=>"margin-right: 89px;"} 
+              %b 6        
+            %li{:style=>"margin-right: 89px;"} 
+              %b 7
+            %li{:style=>"margin-right: 89px;"} 
+              %b 8
+            %li{:style=>"margin-right: 84px;"} 
+              %b 9
+            %li 
+              %b 10
+
+
+      %h3{:style=>"color: #FFFFFF;font-size: 14px; margin-right: 680px;background-color: rgb(26, 185, 240);padding-left: 12px;margin-left: 3px;"} DETAILED COMPARISON RESULTS
+      
+      
+      %a.btn{"data-toggle" => "modal", href: "#myModal1", role: "button", :class => "btn btn-info",:style=>"float: right; margin-top: -30px;"} Suggest your own
+      .skillset_compare
+        .skillCont
+          %section#options{:class => "clearfix" }
+            %ul{:id => "filters", :class => "option-set clearfix", :"data-option-key" => "filter",:style=>"padding-top: 10px;"}
+              %li
+                %a.skillsetmap{:href => "#filter", :id => "all", :style=>"background:none repeat scroll 0 0 black; color: white; height: 27px;"}
+                  All Skills
+              %li
+                %a.skillsetmap{:href => "#filter", :id => "better", :style=>"background: none repeat scroll 0 0 #87C42B;height: 27px;"}
+                  Better then others
+              %li
+                %a.skillsetmap{:href => "#filter", :id => "equal", :style=> "background: none repeat scroll 0 0 #FF9900 ;height: 27px;"}
+                  Match others
+              %li
+                %a.skillsetmap{:href => "#filter", :id => "improvement", :style=> "background: none repeat scroll 0 0  #FACA09;height: 27px;"}
+                  Needs Improvement
+              %li
+                %a.skillsetmap{:href => "#filter", :id => "missing", :style=> "background: none repeat scroll 0 0 #FF5959; color: white;height: 27px;"}
+                  Missing Skillsets
+              %li
+                %a.skillsetmap{:href => "#filter", :id => "unique", :style=> "background: none repeat scroll 0 0 #0088CC; color: white;height: 27px;"}
+                  Your Unique Skillsets    
+       
+        .search_result{:style=>"float: right; margin-top: 4px; margin-right: 22px; width: 100%; "}  
+          %ul
+            
+
+            - if !@search_match.blank?
+              - skill_name=[]
+              - @search_match.each_with_index do |search_match,index|
+                
+                - if !@skillsets.nil?
+                  - @skillsets.each do |skillset|
+                    - if skillset.name == search_match.first
+                      - if skillset.expertise_level_id < search_match.second.to_i
+                        -if !skill_name.include? search_match.first
+                          %li{:class=>"better blocks", :style=>"float:left; width:138px;"}
+                            - if !Resource.all.collect(&:skill_set_id).include?(search_match.third.to_i)
+                              =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"
+                            -else
+                              - @res_available = Resource.where("skill_set_id = ?", search_match.third.to_i)
+                              - if !@res_available.blank?
+                                - if @res_available.first.approved == true
+                                  =link_to "#{search_match.first}","#",:class=>"resource_available",:id=>search_match.third  
+                                -else
+                                  =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"   
+                              - else
+                                =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"
+
+                            = hidden_field_tag :skill_set_id,nil, :value => search_match.third                             
+                            - skill_name << search_match.first
+                            - if index==4
+                              %br/  
+              
+               
+              - @search_match.each_with_index do |search_match,index|
+                - if !@skillsets.nil?
+                  - @skillsets.each do |skillset|
+                    - if skillset.name == search_match.first
+                      - if skillset.expertise_level_id ==  search_match.second.to_i
+                        -if !skill_name.include? search_match.first
+                          %li{:class=>"equal blocks", :style=>"float:left; width:138px;"}
+                            - if !Resource.all.collect(&:skill_set_id).include?(search_match.third.to_i)
+                              =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"
+                            -else
+                              - @res_available = Resource.where("skill_set_id = ?", search_match.third.to_i)
+                              - if !@res_available.blank?
+                                - if @res_available.first.approved == true
+                                  =link_to "#{search_match.first}","#",:class=>"resource_available",:id=>search_match.third  
+                                -else
+                                  =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"   
+                              - else
+                                =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"
+
+                            = hidden_field_tag :skill_set_id,nil, :value => search_match.third   
+                            - skill_name << search_match.first
+                            - if index==4
+                              %br/  
+                           
+              - @search_match.each_with_index do |search_match,index|
+                - if !@skillsets.nil?
+                  - @skillsets.each do |skillset|
+                    - if skillset.name == search_match.first
+                      - if skillset.expertise_level_id > search_match.second.to_i
+                        -if !skill_name.include? search_match.first
+                          %li{:class=>"improvement blocks", :style=>"float:left; width:138px;"}
+                            - if !Resource.all.collect(&:skill_set_id).include?(search_match.third.to_i)
+                              =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"
+                            -else
+                              - @res_available = Resource.where("skill_set_id = ?", search_match.third.to_i)
+                              - if !@res_available.blank?
+                                - if @res_available.first.approved == true
+                                  =link_to "#{search_match.first}","#",:class=>"resource_available",:id=>search_match.third  
+                                -else
+                                  =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"   
+                              - else
+                                =link_to "#{search_match.first}",'#myModal4', :id=>search_match.third, data: {toggle: "modal","id" => "#{search_match.third}"},:class=>"open-AddResourceDialog"
+
+                            = hidden_field_tag :skill_set_id,nil, :value => search_match.third   
+                            - skill_name << search_match.first
+                            - if index==4
+                              %br/  
+            
+            - if !@user_skillsets_missing.blank?
+              - @user_skillsets_missing.each_with_index do |missing_user,index|
+                %li{:class=>"missing blocks", :style=>"float:left; width:138px;",:id=>missing_user.second.to_i}
+
+                  - if !Resource.all.collect(&:skill_set_id).include?(missing_user.second.to_i)
+                    
+                    =link_to "#{missing_user.first}",'#myModal4', :id=>missing_user.second, data: {toggle: "modal","id" => "#{missing_user.second}"},:class=>"open-AddResourceDialog"
+                  -else
+                    - @res_available = Resource.where("skill_set_id = ?", missing_user.second.to_i)
+                
+                    - if !@res_available.blank?
+                      -if @res_available.first.approved == true
+                        =link_to "#{missing_user.first}","#",:class=>"resource_available",:id=>missing_user.second  
+                      -else
+                        =link_to "#{missing_user.first}",'#myModal4', :id=>missing_user.second, data: {toggle: "modal","id" => "#{missing_user.second}"},:class=>"open-AddResourceDialog"   
+                    - else
+                      =link_to "#{missing_user.first}",'#myModal4', :id=>missing_user.second, data: {toggle: "modal","id" => "#{missing_user.second}"},:class=>"open-AddResourceDialog"
+
+                  = hidden_field_tag :skill_set_id,nil, :value => missing_user.second 
+                  - if index==4
+                    %br/
+                      
+                    
+            - if !@user_unique_skillsets.blank?
+              - @user_unique_skillsets.each_with_index do |user_unique,index| 
+                %li{:class=>"unique blocks", :style=>"float:left; width:138px;"}
+                  - if !Resource.all.collect(&:skill_set_id).include?(user_unique.second.to_i)
+                    =link_to "#{user_unique.first}",'#myModal4', :id=>user_unique.second, data: {toggle: "modal","id" => "#{user_unique.second}"},:class=>"open-AddResourceDialog"
+                  -else
+                    - @res_available = Resource.where("skill_set_id = ?", user_unique.second.to_i)
+                    - if !@res_available.blank?
+                      -if @res_available.first.approved == true
+                        =link_to "#{user_unique.first}","#",:class=>"resource_available",:id=>user_unique.second 
+                      -else
+                        =link_to "#{user_unique.first}",'#myModal4', :id=>user_unique.second, data: {toggle: "modal","id" => "#{user_unique.second}"},:class=>"open-AddResourceDialog"
+                    - else
+                      =link_to "#{user_unique.first}",'#myModal4', :id=>user_unique.second, data: {toggle: "modal","id" => "#{user_unique.second}"},:class=>"open-AddResourceDialog"
+                  = hidden_field_tag :skill_set_id,nil, :value => user_unique.second    
+                  - if index==4
+                    %br/
+
+          %div#yuvasoft
+            / - if @missing_skillsets.blank? && @search_match.blank?
+            /   %b Sorry No suggestions , Please Suggest your own title
+
+        #myModal4.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);"}  
+          %h4{:style=>"margin-top: 0px; margin-right: 28em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}No Resource Found
+          .modal-body{:style=>"overflow-y:hidden;"}  
+
+            %div
+              Sorry, there are no available resources for the selected skill. We are continuously working on adding new resources. You can do the following
+              
+            %div{:style=>"margin-top: 25px; font-size: 16px;"}
+              %b Send us a request, and we will add resource/s for this Skill. 
+              %br
+              %br
+              =  link_to 'Send a request', "#",:class=>"requestor btn btn-success",:value=>"",:id=>"aman"
+            %br
+             
+            Or
+            %div{:style=>"margin-top: 15px; font-size: 16px;"}
+              %b if you know a resource, Suggest a resource and we will add that to available resources.
+              %br
+              %br
+              = link_to "Suggest a resource", "#" ,:class=>"resource btn btn-success ",:id=>""
+                  
+            %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right;margin-top: 15px; margin-right: 44px;",:id=>"model_close"} Cancel   
+#myModal3.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);"}        
+  .modal-body{:style=>"overflow-y:hidden;"}      
+    = render "checked_popup"  
+#myModal53.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog",:style=>"border-width: 3px; border-color: rgb(26, 185, 240);"}
+  %h4{:style=>"margin-top: 0px; margin-right: 25em; height: 28px; background-color: rgb(26, 185, 240); color: #FFFFFF;font-size: 14px;"}Request a new resource        
+  .modal-body{:style=>"overflow-y:hidden;"}      
+    %b Thanks for submitting your request, we will inform you when the requested resources are available.
+    %br/
+    %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal",:style=>"float:right; margin-top: 30px; margin-right: 6px; padding-left: 30px; padding-right: 30px;",:id=>"model_close",:title=>"Request a new resource",:class=>"model_pop_request"} Ok                      
+             
+:css
+  .unique.blocks > h4 {
+    font-size: 12px;
+  }
+  .better.blocks > h4 {
+    font-size: 12px;
+  }
+  .equal.blocks > h4 {
+    font-size: 12px;
+  }
+  .improvement.blocks > h4 {
+    font-size: 12px;
+  }
+  .missing.blocks > h4 {
+    font-size: 12px;
+
+  }
+  .missing.blocks a {
+    color: white;
+  }
+  .unique.blocks a {
+    color: white;
+  }
+  .better.blocks a {
+    color: black;
+  }
+  .improvement.blocks a {
+    color: black;
+  }
+  .equal.blocks a {
+    color: black;
+  }
+  .fancybox-inner {
+    height: 300px !important;
+  }
+  
+  .open-AddResourceDialog {
+    padding: 8px;
+  }
+  
+:javascript
+  $(document).on("click", ".open-AddResourceDialog", function () {
+     var skillset_id = $(this).data('id');
+     $(".resource").attr("id", skillset_id)
+  
+  });  
+
+  $(".resource").click(function(){
+    var skillset_id = $(this).attr("id");
+    window.location = "#{resource_path}?id="+skillset_id;
+
+  })
+   $(document).on("click", ".open-AddResourceDialog", function () {
+     var skillset_id1 = $(this).data('id');
+     $(".requestor").attr("value", skillset_id1)
+  
+  });  
+
+   $(".requestor").click(function(){
+     var skillset_id1 = $(this).attr("value");
+     $('#myModal4').hide(); 
+     $('#myModal53').modal("show");  
+     $(".modal-body").focus();
+      
+
+   })
+  $(".model_pop_request").click(function(){
+  myTextBox = document.getElementById("aman");
+  skillset_id1 = myTextBox.value;
+   $.ajax({
+      url: "#{requestor_path}",
+      data: {id: skillset_id1},
+      success: function () {
+       $('#myModal4').modal('hide');
+       $('#myModal53').modal('hide');
+      }
+    })
+  })
+
+  $(".resource_available").click(function(){
+  
+     var skillset_id = this.id;
+     $.ajax({
+      url: "#{resource_available_skill_sets_path}",
+      data: {data: skillset_id}
+    })
+  })
+
+  $("#last").click(function() {
+    if (#{current_user.checked !=true}){ 
+      setTimeout(function(){
+      $('#myModal3').modal("show");  
+      $(".modal-body").focus();
+      }, 3000);   
+    } 
+  })
+ 
+ 

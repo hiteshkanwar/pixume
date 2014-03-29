@@ -1,0 +1,79 @@
+!!!
+%html(lang="en")
+  %head
+    %meta(charset="utf-8")
+    = metamagic :title => "Visual Resume | Visual Resume format | Online resume| Resume format", :description => "Pixsume creates visual resumes in seconds. Create your visual resume, identify your skillset gap and let Pixsume helps you improve your skillsets and your visual Resume", :keywords => "Visual Resume,Visual resumes,visual CV,resume format,best resume format,resume,example resume", :"p:domain_verify" => "0a9c74ef453a0b2c96f7149ceb6fea06"
+    = csrf_meta_tags
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+   
+    :javascript
+      $(document).ready(function(){
+        $(document).bind('cbox_open', function(){
+          $("#colorbox").css("opacity", 0);
+        });
+        $(document).bind('cbox_complete', function(){
+          $("#colorbox").css("opacity", 1);
+          $(this).colorbox.resize();
+        });
+        if($.browser.msie){
+          $.colorbox({html:"<div style='padding:10px; height:250px'>Sorry, we currently don't support Internet Explorer :( . You can continue using IE but for optimum performance, we would recommend Chrome or Firefox.<br/><br/>If you don't have any of these browsers, Please use the link below to download now<br/><br/><br/>Chrome: <a href='https://www.google.com/intl/en/chrome/browser/' target='_blank'>https://www.google.com/intl/en/chrome/browser/</a><br/><br/>Firefox: <a href='http://www.mozilla.org/en-US/firefox/new/' target='_blank'>http://www.mozilla.org/en-US/firefox/new/</a></div>", width:'500px', close:'Ok'});
+        }
+      });
+      
+    
+      var _kmq = _kmq || [];
+      var _kmk = _kmk || '474ed7c720dc63f416a10040e780426ac2fe7f42';
+      function _kms(u){
+        setTimeout(function(){
+          var d = document, f = d.getElementsByTagName('script')[0],
+          s = d.createElement('script');
+          s.type = 'text/javascript'; s.async = true; s.src = u;
+          f.parentNode.insertBefore(s, f);
+        }, 1);
+      }
+      _kms('//i.kissmetrics.com/i.js');
+      _kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');  
+    :javascript
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39545351-1']);
+      _gaq.push(['_setDomainName', 'pixsume.com']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+  %body
+    .navbar
+      %section.container
+        .navInner
+          %a{:href => "/"}
+            %img.logo{:alt => "Visual Resume", :src => "/assets/logo.png",:style=>"margin-left: -8px;"}/
+          = render 'layouts/header_menu'
+      
+    = yield
+    = render 'layouts/footer'
+    = stylesheet_link_tag 'application', :media => "all"
+    
+    -session[:previous_url]=request.original_url
+-if !current_user.nil?   
+  :javascript  
+    $(document).ready(function() {
+      $("a").click(function(event) {  
+        var value = event.target
+
+        $.ajax({
+          type: "POST",
+          url: "/users/#{current_user.id}/error_event",
+          data: "path="+value,
+          success: function(response) {
+            alert(response);
+          }
+        
+        });
+
+      });
+      
+   

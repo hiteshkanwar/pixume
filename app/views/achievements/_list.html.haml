@@ -1,0 +1,46 @@
+%h2
+  %span Achievements
+- unless achievements.blank?
+  %h3.achievementsTop
+    #achievement_msg
+    %span.first Title
+    %span.second Category
+  #achieveCont
+    #achievement_msg
+    - achievements.each do |achievement|
+      - unless achievement.blank?
+        .achievements{:style => "height: 100%"}
+          %span.infos.first= achievement.title
+          %span.infos.second= achievement.category
+          .btnCont
+            = link_to "<span></span>Edit".html_safe, edit_achievement_url(achievement), :class => "btn dropdown-toggle edit edit_achievement_link"
+            = link_to "<span></span>".html_safe,  achievement_url(achievement), method: :delete, "data-eid" => achievement.id, :class => "btn dropdown-toggle cls del_achievement_link"
+- else
+  %div
+    %p.cliped{:style => "font-size: 14px;"}= "Tell us what you have achieved so far, think quantifiable achievements"
+
+= link_to "<span></span>Add Achievements".html_safe, new_achievement_url, :class => "btn dropdown-toggle add_achievement_link"
+
+:javascript
+  $(".edit_achievement_link, .add_achievement_link").click(function(){
+    url = $(this).attr('href');
+    $.colorbox({
+      href: url,
+      width: '480px'
+    });
+    return false;
+  });
+
+  $(".del_achievement_link").click(function() {
+    var me = $(this);
+    $.confirm({
+      confirm: function(button) {
+        id = me.data('eid');
+        $.ajax({
+          url: '/achievements/'+id+'.js',
+          type: 'delete'
+        });
+      }
+    });
+    return false;
+  });

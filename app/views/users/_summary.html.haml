@@ -1,0 +1,63 @@
+:css
+  .cliped{
+    /*height: 199px;*/
+    height:auto;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    word-wrap: break-word; /* IE 5.5-7 */ 
+    white-space: -moz-pre-wrap; /* Firefox 1.0-2.0 */ 
+    white-space: pre-line; /* current browsers */
+  }
+  .cliped:hover{
+    overflow:visible;
+    height:auto;
+  }
+
+- unless user.summary.blank?
+  - user_summary = @user.summary.strip
+  - if user_summary.length > 299
+    %div.summary{:id => "summary_part"}
+      %p.cliped
+        = user_summary[0..299]
+        %div{:style => "height:2px;margin:0;padding:0"}
+        %a.showhide{:id => "summary_show_more", :style => "cursor:pointer; white-space:normal"} Show more
+    %div.summary{:id => "summary_full", :style => "display: none !important"}
+      %p.cliped= user_summary
+      %div{:style => "height:2px;margin:0;padding:0"}
+      %a.showhide{:id => "summary_show_less", :style => "cursor:pointer; white-space:normal"} Show less
+    :javascript
+      $(document).ready(function(){
+        $("#summary_show_more").click(function(){
+          $("#summary_part").css("display: none !important");
+          $("#summary_part").hide("slow", function() {
+            $("#summary_full").css("display: block !important");
+            $("#summary_full").show("slow");
+          });
+        });
+
+        $("#summary_show_less").click(function(){
+          $("#summary_full").css("display: none !important");
+          $("#summary_full").hide("slow", function() {
+            $("#summary_part").css("display: block !important");
+            $("#summary_part").show("slow");
+          });
+        });
+      })
+  - else
+    %div.summary
+      %p.cliped= user_summary
+- else
+  %div.summary
+    %p.cliped= "Tell us your brand statement"
+.clear
+= link_to "<span></span>Edit".html_safe, edit_summary_url, :class => "btn dropdown-toggle edit edit_summary_link"
+
+:javascript
+  $(".edit_summary_link").click(function (){
+    url = $(this).attr('href')
+    $.colorbox({
+      href: url,
+      width: '580px'
+    })
+    return false;
+  })

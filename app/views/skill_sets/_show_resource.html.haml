@@ -1,0 +1,25 @@
+.careerSnap
+  %h2
+    %span
+      = "View Resources"
+- if !@resources.blank?
+  %table.table.table-striped
+    %tr
+      %th Logo/Image
+      %th Skill Set
+      %th Resource Name 
+      %th Detail
+      %th Status
+
+    - @resources.each do |resource|
+
+      %tr
+        %td= image_tag(resource.logo(:thumb), :alt => "", :class => '')
+        %td= resource.name
+        %td= resource.resource_name
+        %td= link_to "View Detail",resource_detail_skill_set_path(resource),:class=>"btn btn-success "
+        - if resource.approved == true
+          %td= button_to('Active',approved_resource_skill_sets_path(resource), :class => 'btn btn-primary', :method => :get)
+        -else
+          %td= button_to('Pending approval',pending_resource_skill_sets_path(resource), :class => 'btn btn-primary', :method => :get)
+       

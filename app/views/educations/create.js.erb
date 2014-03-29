@@ -1,0 +1,8 @@
+<% if @education.errors.blank? %>
+	if($("#educations_list").length > 0){
+		$("#educations_list").html("<%= j render('educations/list', :educations => @user.educations) %>")
+	}
+	$.colorbox.close()
+<% else %>
+	$("#education_errors").html("<%= j errors_for(@education) %>")
+<% end %>

@@ -1,0 +1,6 @@
+<% if @skill_set.errors.blank? %>
+  $("#skill_sets_list").html("<%= j render('skill_sets/list', :skill_sets => @user.skill_sets) %>")
+	$("#skill_msg").html("<%= j flash_ajax_msg('success', 'Skillset deleted successfully') %>")
+<% else %>
+	$("#skill_msg").html("<%= j errors_for(@skill_set) %>")
+<% end %>

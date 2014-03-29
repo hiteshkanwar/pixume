@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @skill_category.name
+%p
+  %b Description:
+  = @skill_category.description
+%p
+  %b Is public:
+  = @skill_category.is_public
+
+= link_to 'Edit', edit_skill_category_path(@skill_category)
+\|
+= link_to 'Back', skill_categories_path

@@ -1,0 +1,20 @@
+= form_for @company, :html => { :class => 'form-horizontal' } do |f|
+  .control-group
+    = f.label :company_name, :class => 'control-label'
+    .controls
+      = f.text_field :company_name, :class => 'text_field'
+  .control-group
+    = f.label :company_industry, :class => 'control-label'
+    .controls
+      = f.text_field :company_industry, :class => 'text_field'
+  .control-group
+    = f.label :company_desc, :class => 'control-label'
+    .controls
+      = f.text_field :company_desc, :class => 'text_field'
+  .control-group
+    = f.label :company_location, :class => 'control-label'
+    .controls
+      = f.text_field :company_location, :class => 'text_field'
+  .form-actions
+    = f.submit nil, :class => 'btn btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), companies_path, :class => 'btn'

@@ -1,0 +1,37 @@
+.ontop {
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
+    background-color: #cccccc;
+    color: #aaaaaa;
+    opacity: 1.00;
+    filter: alpha(opacity = 50);
+  
+  }
+  #popup {
+    width: 300px;
+    height: 200px;
+    position: absolute;
+    color: #000000;
+    background-color: #ffffff;
+    /* To align popup window at the center of screen*/
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -150px;
+    border-color: #1AB9F0;
+  }
+  th {
+      width: 250px;
+  }
+  td {
+      padding: 30px;
+  }
+  
+  .actions {
+    margin-left: 186px;
+    margin-top: -30px;
+  }

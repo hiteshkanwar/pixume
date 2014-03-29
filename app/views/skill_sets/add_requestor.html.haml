@@ -1,0 +1,24 @@
+= metamagic :title => "Pixsume Visual Resume | Requestor"
+:javascript
+  if (window.opener && !window.opener.closed && window.opener.location.href.indexOf("pixsume.com") != -1) {
+    window.opener.location = "/";
+    window.close();
+  }
+%section#body.inner
+  %section.container
+    .hero-unit.infoBox.final
+      = form_for @requestor, :url => { :action => "create_requestor" } do |f|
+        %br
+        .control-group
+          = f.label 'name', :class => 'control-label', :required => true
+          .controls
+            = f.text_field :requestor_name,:class => 'span2 ahead', :required => true, :maximum => 50
+          
+        .control-group
+          = f.label 'email', :class => 'control-label', :required => true
+          .controls
+            = f.email_field :requestor_email,:class => 'span2 ahead', :required => true, :maximum => 50 
+            = hidden_field_tag "skill_set" ,params[:id]
+        .form-actions
+          = f.submit 'Post Requestor Now', :class => 'btn btn-primary'
+          

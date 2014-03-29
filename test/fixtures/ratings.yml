@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_id: 1
+  num_connections: 1
+  num_recommendations: 1
+  num_groups: 1
+  num_posts_per_month: 1
+
+two:
+  user_id: 1
+  num_connections: 1
+  num_recommendations: 1
+  num_groups: 1
+  num_posts_per_month: 1
